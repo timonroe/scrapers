@@ -1,5 +1,5 @@
 {
-  "name": "scrapers",
+  "name": "@soralinks/scrapers",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
