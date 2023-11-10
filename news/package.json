@@ -2,11 +2,11 @@
   "name": "@soralinks/news-scrapers",
   "version": "0.0.1",
   "description": "Scraping news organizations' websites for headlines",
-  "author": "timonroe12@gmail.com",
+  "author": "Tim Monroe <timonroe12@gmail.com>",
   "types": "./index.d.ts",
   "main": "./index.js",
   "type" :"module",
-  "license": "ISC",
+  "license": "MIT",
   "private": false,
   "scripts": {
     "build": "./build.sh"
