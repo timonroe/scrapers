@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Executing the scrapers-news build script..."
+echo "Executing the @soralinks/news-scrapers build script..."
 
 # get the current working directory so we can switch back to it at the end
 current_directory=$(pwd)
