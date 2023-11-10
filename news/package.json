@@ -1,0 +1,20 @@
+{
+  "name": "scrapers",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type" :"module",
+  "scripts": {
+    "build": "bash ./build.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "dotenv": "^16.3.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "puppeteer": "^21.5.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

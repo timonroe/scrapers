@@ -132,9 +132,3 @@ dist
 
 # OS
 .DS_Store
-
-# Deployments folder
-deployments/
-
-# CloudFormation folder
-cloudformation/
