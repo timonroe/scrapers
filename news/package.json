@@ -1,11 +1,15 @@
 {
-  "name": "@soralinks/scrapers",
+  "name": "@soralinks/news-scrapers",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Scraping news organizations' websites for headlines",
+  "author": "timonroe12@gmail.com",
+  "types": "./index.d.ts",
+  "main": "./index.js",
   "type" :"module",
+  "license": "ISC",
+  "private": false,
   "scripts": {
-    "build": "bash ./build.sh"
+    "build": "./build.sh"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
@@ -14,7 +18,5 @@
   },
   "dependencies": {
     "puppeteer": "^21.5.0"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }
