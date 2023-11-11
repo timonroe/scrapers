@@ -108,7 +108,6 @@
   },
   "files": [
     "common/interfaces.ts",
-    "common/logging.ts",
     "./cnn/index.ts",
     "index.ts"
   ],

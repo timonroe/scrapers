@@ -1,5 +1,5 @@
+import { Logger } from '@soralinks/logger';
 import puppeteer from 'puppeteer';
-import Logger from '../common/logging.js';
 import { NewsScraper } from '../common/interfaces.js';
 
 const {
@@ -12,11 +12,10 @@ export class CNNScraper implements NewsScraper {
   constructor() {
     let logging: boolean;
     if (LOGGING_CNN_SCRAPER && LOGGING_CNN_SCRAPER === 'on') {
-      logging = true;
+      this.logger = new Logger({ logInfo: true, logVerbose: false, logWarning: false, logError: true });
     } else {
-      logging = false;
+      this.logger = new Logger({ logInfo: false, logVerbose: false, logWarning: false, logError: false });
     }
-    this.logger = new Logger(logging);
   }
 
   async scrape(): Promise<string[]> {
@@ -44,7 +43,7 @@ export class CNNScraper implements NewsScraper {
         await browser.close();
       }
     }
-    this.logger.log(`CNNScraper.scrape: ${JSON.stringify(headlines, null, 2)}`);
+    this.logger.info('CNNScraper.scrape: %s', `${JSON.stringify(headlines, null, 2)}`);
     return headlines;
   }
 }
