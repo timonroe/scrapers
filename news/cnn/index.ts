@@ -11,9 +11,9 @@ export class CNNScraper implements NewsScraper {
 
   constructor() {
     if (LOGGING_CNN_SCRAPER && LOGGING_CNN_SCRAPER === 'on') {
-      this.logger = new Logger({ logInfo: true, logError: true });
+      this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
-      this.logger = new Logger({});
+      this.logger = new Logger({ logError: true });
     }
   }
 
@@ -35,7 +35,8 @@ export class CNNScraper implements NewsScraper {
         });
         return data;
       });
-    } catch (error) {
+    } catch (error: any) {
+      this.logger.error('CNNScraper.scrape error: %s', error.message);
       throw error;
     } finally {
       if (browser) {
