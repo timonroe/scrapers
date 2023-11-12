@@ -43,7 +43,7 @@ export class CNNScraper implements NewsScraper {
         await browser.close();
       }
     }
-    this.logger.verbose('CNNScraper.scrape: %s', `${JSON.stringify(headlines, null, 2)}`);
+    this.logger.verbose('CNNScraper.scrape: %s', JSON.stringify(headlines, null, 2));
     return headlines;
   }
 }

@@ -5,10 +5,10 @@ export class CNNScraper {
     logger;
     constructor() {
         if (LOGGING_CNN_SCRAPER && LOGGING_CNN_SCRAPER === 'on') {
-            this.logger = new Logger({ logInfo: true, logError: true });
+            this.logger = new Logger({ logVerbose: true, logError: true });
         }
         else {
-            this.logger = new Logger({});
+            this.logger = new Logger({ logError: true });
         }
     }
     async scrape() {
@@ -31,6 +31,7 @@ export class CNNScraper {
             });
         }
         catch (error) {
+            this.logger.error('CNNScraper.scrape error: %s', error.message);
             throw error;
         }
         finally {
@@ -38,7 +39,7 @@ export class CNNScraper {
                 await browser.close();
             }
         }
-        this.logger.info('CNNScraper.scrape: %s', `${JSON.stringify(headlines, null, 2)}`);
+        this.logger.verbose('CNNScraper.scrape: %s', JSON.stringify(headlines, null, 2));
         return headlines;
     }
 }
