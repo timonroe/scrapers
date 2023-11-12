@@ -4,12 +4,11 @@ const { LOGGING_CNN_SCRAPER, } = process.env;
 export class CNNScraper {
     logger;
     constructor() {
-        let logging;
         if (LOGGING_CNN_SCRAPER && LOGGING_CNN_SCRAPER === 'on') {
-            this.logger = new Logger({ logInfo: true, logVerbose: false, logWarning: false, logError: true });
+            this.logger = new Logger({ logInfo: true, logError: true });
         }
         else {
-            this.logger = new Logger({ logInfo: false, logVerbose: false, logWarning: false, logError: false });
+            this.logger = new Logger({});
         }
     }
     async scrape() {

@@ -17,7 +17,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@soralinks/logger": "0.0.2",
+    "@soralinks/logger": "0.0.3",
     "puppeteer": "^21.5.0"
   }
 }
