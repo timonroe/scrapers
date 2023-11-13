@@ -8,17 +8,37 @@ Scraping news organizations' websites for headlines
 ## Use in your app
 
 ```javascript
-import { CNNScraper } from '@soralinks/news-scrapers';
+import { CNNScraper, FoxScraper } from '@soralinks/news-scrapers';
 
 const cnnScraper: CNNScraper = new CNNScraper();
-const cnnHeadlines: string[] = await cnnScraper.scrape();
-console.log(JSON.stringify(cnnHeadlines, null, 2));
+const foxScraper: FoxScraper = new FoxScraper();
+const scrapers = [
+  cnnScraper,
+  foxScraper,
+];
+
+const results = await Promise.allSettled(
+  scrapers.map(async (scraper) => {
+    return scraper.scrape();
+  }),
+);
+console.log('results: ', JSON.stringify(results, null, 2));
+
+const headlines = results.map(result => {
+  if (result.status === 'fulfilled') {
+    return result.value;
+  }
+  return undefined;
+}).filter(Boolean);
+console.log('all headlines: ', JSON.stringify(headlines, null, 2));
 
 ```
 
 ## Logging
 ```javascript
-// To turn on logging, set the environment variable: LOGGING_CNN_SCRAPER = 'on'
+// To turn on logging, set the following environment variables:
+//   LOGGING_CNN_SCRAPER = 'on'
+//   LOGGING_FOX_SCRAPER = 'on'
 // Note that error logging is always on
 
 ```
