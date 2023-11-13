@@ -1,5 +1,5 @@
-# scrapers
-Data scraping used for extracting data from websites
+# news-scrapers
+Scraping news organizations' websites for headlines
 
 ## Install
 
