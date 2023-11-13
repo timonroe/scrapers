@@ -15,3 +15,10 @@ const cnnHeadlines: string[] = await cnnScraper.scrape();
 console.log(JSON.stringify(cnnHeadlines, null, 2));
 
 ```
+
+## Logging
+```javascript
+// To turn on logging, set the environment variable: LOGGING_CNN_SCRAPER = 'on'
+// Note that error logging is always on
+
+```

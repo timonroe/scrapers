@@ -1,6 +1,6 @@
 {
   "name": "@soralinks/news-scrapers",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Scraping news organizations' websites for headlines",
   "author": "Tim Monroe <timonroe12@gmail.com>",
   "types": "./index.d.ts",
@@ -17,7 +17,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@soralinks/logger": "0.0.5",
+    "@soralinks/logger": "0.0.6",
     "puppeteer": "^21.5.0"
   }
 }
