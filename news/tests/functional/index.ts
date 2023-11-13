@@ -1,8 +1,27 @@
 import 'dotenv/config';
-import { CNNScraper } from '../../index.js';
+import { CNNScraper, FoxScraper } from '../../index.js';
 
 (async () => {
   const cnnScraper: CNNScraper = new CNNScraper();
-  const cnnHeadlines: string[] = await cnnScraper.scrape();
-  console.log(JSON.stringify(cnnHeadlines, null, 2));
+  const foxScraper: FoxScraper = new FoxScraper();
+  const scrapers = [
+    cnnScraper,
+    foxScraper,
+  ];
+
+  const results = await Promise.allSettled(
+    scrapers.map(async (scraper) => {
+      return scraper.scrape();
+    }),
+  );
+  console.log('results: ', JSON.stringify(results, null, 2));
+
+  const headlines = results.map(result => {
+    if (result.status === 'fulfilled') {
+      return result.value;
+    }
+    return undefined;
+  }).filter(Boolean);
+  console.log('all headlines: ', JSON.stringify(headlines, null, 2));
+
 })();

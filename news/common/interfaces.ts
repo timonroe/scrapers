@@ -1,4 +1,9 @@
 
+export type NewsScraperResponse = {
+  source: string;
+  headlines: string[];
+}
+
 export interface NewsScraper {
-  scrape(): Promise<string[]>;
+  scrape(): Promise<NewsScraperResponse>;
 }

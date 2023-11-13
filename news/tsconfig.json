@@ -109,6 +109,7 @@
   "files": [
     "./common/interfaces.ts",
     "./cnn/index.ts",
+    "./fox/index.ts",
     "./index.ts",
     "./tests/functional/index.ts"
   ],
