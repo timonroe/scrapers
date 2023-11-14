@@ -24,13 +24,13 @@ const results = await Promise.allSettled(
 );
 console.log('results: ', JSON.stringify(results, null, 2));
 
-const headlines = results.map(result => {
+const responses = results.map(result => {
   if (result.status === 'fulfilled') {
     return result.value;
   }
   return undefined;
 }).filter(Boolean);
-console.log('all headlines: ', JSON.stringify(headlines, null, 2));
+console.log('headlines: ', JSON.stringify(responses, null, 2));
 
 ```
 
