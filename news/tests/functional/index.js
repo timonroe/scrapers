@@ -1,11 +1,11 @@
 import 'dotenv/config';
-import { CNNScraper, FoxScraper } from '../../index.js';
+import { CNNScraper } from '../../index.js';
 (async () => {
     const cnnScraper = new CNNScraper();
-    const foxScraper = new FoxScraper();
+    // const foxScraper: FoxScraper = new FoxScraper();
     const scrapers = [
         cnnScraper,
-        foxScraper,
+        // foxScraper,
     ];
     const results = await Promise.allSettled(scrapers.map(async (scraper) => {
         return scraper.scrape();

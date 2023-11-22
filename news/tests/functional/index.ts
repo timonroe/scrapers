@@ -3,10 +3,10 @@ import { CNNScraper, FoxScraper } from '../../index.js';
 
 (async () => {
   const cnnScraper: CNNScraper = new CNNScraper();
-  const foxScraper: FoxScraper = new FoxScraper();
+  // const foxScraper: FoxScraper = new FoxScraper();
   const scrapers = [
     cnnScraper,
-    foxScraper,
+    // foxScraper,
   ];
 
   const results = await Promise.allSettled(

@@ -1,7 +1,12 @@
 
+export type NewsScraperResponseHeadline = {
+  title: string;
+  url: string;
+}
+
 export type NewsScraperResponse = {
   source: string;
-  headlines: string[];
+  headlines: NewsScraperResponseHeadline[];
 }
 
 export interface NewsScraper {

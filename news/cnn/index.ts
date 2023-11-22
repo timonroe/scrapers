@@ -1,6 +1,6 @@
 import { Logger } from '@soralinks/logger';
 import puppeteer from 'puppeteer';
-import { NewsScraper, NewsScraperResponse } from '../common/interfaces.js';
+import { NewsScraper, NewsScraperResponse, NewsScraperResponseHeadline } from '../common/interfaces.js';
 
 const {
   LOGGING_CNN_SCRAPER,
@@ -18,7 +18,7 @@ export class CNNScraper implements NewsScraper {
   }
 
   async scrape(): Promise<NewsScraperResponse> {
-    let headlines: string[] = [];
+    let headlines: NewsScraperResponseHeadline[] = [];
     let browser;
     try {
       browser = await puppeteer.launch({ headless: 'new' });
@@ -26,7 +26,7 @@ export class CNNScraper implements NewsScraper {
       await page.goto('https://www.cnn.com/politics');
       await page.waitForSelector('.layout__main');  // Wait for it to load
       headlines = await page.evaluate(() => {
-        const data: any[] = [];
+        const data: NewsScraperResponseHeadline[] = [];
         const headlines = document.querySelectorAll('.container_lead-plus-headlines__link');
         headlines.forEach((headlineElement) => {
           let href = headlineElement.getAttribute('href');

@@ -24,7 +24,10 @@ export class FoxScraper {
                 const headlines = document.querySelectorAll('.article-list .article .info .title');
                 headlines.forEach((headline) => {
                     if (headline && headline.textContent) {
-                        data.push(headline.textContent.trim());
+                        data.push({
+                            title: headline.textContent.trim(),
+                            url: '',
+                        });
                     }
                 });
                 return data;
