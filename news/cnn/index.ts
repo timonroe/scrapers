@@ -24,17 +24,28 @@ export class CNNScraper implements NewsScraper {
       browser = await puppeteer.launch({ headless: 'new' });
       const page = await browser.newPage();
       await page.goto('https://www.cnn.com/politics');
-      await page.waitForSelector('.container__field-links');  // Wait for it to load
+      await page.waitForSelector('.layout__main');  // Wait for it to load
       headlines = await page.evaluate(() => {
-        const data: string[] = [];
-        const headlines = document.querySelectorAll('.container__headline-text');
-        headlines.forEach((headline) => {
-          if (headline && headline.textContent) {
-            data.push(headline.textContent.trim());
+        const data: any[] = [];
+        const headlines = document.querySelectorAll('.container_lead-plus-headlines__link');
+        headlines.forEach((headlineElement) => {
+          let href = headlineElement.getAttribute('href');
+          if (href) href = href.trim();
+          let title;
+          const titleElement = headlineElement.querySelector('.container__headline-text');
+          if (titleElement) {
+            title = titleElement.textContent;
+            if (title) title = title.trim();
+          }
+          if (href && title) {
+            data.push({
+              title,
+              url: `https://www.cnn.com${href}`,
+            });
           }
         });
         return data;
-      });
+    });
     } catch (error: any) {
       this.logger.error('CNNScraper.scrape error: %s', error.message);
       throw error;
