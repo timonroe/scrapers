@@ -6,14 +6,14 @@ export enum NewsScraperType {
 export type NewsScraperResponseHeadline = {
   title: string;
   url: string;
-}
+};
 
 export type NewsScraperResponse = {
   source: string;
   type: string,
   headlines: NewsScraperResponseHeadline[];
-}
+};
 
 export interface NewsScraper {
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
-}
+};

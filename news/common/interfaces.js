@@ -4,3 +4,4 @@ export var NewsScraperType;
     NewsScraperType["SPORTS"] = "sports";
 })(NewsScraperType || (NewsScraperType = {}));
 ;
+;

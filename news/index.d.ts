@@ -1,8 +1,22 @@
 import {
-  NewsScraperType,
-  NewsScraperResponse,
   NewsScraper,
 } from './common/interfaces.js';
+
+export declare enum NewsScraperType {
+  POLITICS = 'politics',
+  SPORTS = 'sports',
+}
+
+export declare type NewsScraperResponseHeadline = {
+  title: string;
+  url: string;
+}
+
+export declare type NewsScraperResponse = {
+  source: string;
+  type: string,
+  headlines: NewsScraperResponseHeadline[];
+}
 
 export declare class CNNScraper implements NewsScraper {
   constructor();
