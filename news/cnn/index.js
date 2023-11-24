@@ -1,5 +1,6 @@
 import { Logger } from '@soralinks/logger';
 import puppeteer from 'puppeteer';
+import { NewsScraperType, } from '../common/interfaces.js';
 const { LOGGING_CNN_SCRAPER, } = process.env;
 export class CNNScraper {
     logger;
@@ -11,7 +12,7 @@ export class CNNScraper {
             this.logger = new Logger({ logError: true });
         }
     }
-    async scrape() {
+    async scrapePolitics() {
         let headlines = [];
         let browser;
         try {
@@ -55,7 +56,13 @@ export class CNNScraper {
         this.logger.verbose('CNNScraper.scrape: %s', JSON.stringify(headlines, null, 2));
         return {
             source: 'cnn',
+            type: NewsScraperType.POLITICS,
             headlines,
         };
+    }
+    async scrape(type = NewsScraperType.POLITICS) {
+        if (type === NewsScraperType.POLITICS)
+            return this.scrapePolitics();
+        throw new Error(`scaping type: ${type} is not implemented yet`);
     }
 }

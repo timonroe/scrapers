@@ -1,3 +1,7 @@
+export enum NewsScraperType {
+  POLITICS = 'politics',
+  SPORTS = 'sports',
+};
 
 export type NewsScraperResponseHeadline = {
   title: string;
@@ -6,9 +10,10 @@ export type NewsScraperResponseHeadline = {
 
 export type NewsScraperResponse = {
   source: string;
+  type: string,
   headlines: NewsScraperResponseHeadline[];
 }
 
 export interface NewsScraper {
-  scrape(): Promise<NewsScraperResponse>;
+  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }

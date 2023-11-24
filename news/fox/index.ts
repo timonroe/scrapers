@@ -1,6 +1,11 @@
 import { Logger } from '@soralinks/logger';
 import puppeteer from 'puppeteer';
-import { NewsScraper, NewsScraperResponse, NewsScraperResponseHeadline } from '../common/interfaces.js';
+import {
+  NewsScraperType,
+  NewsScraperResponseHeadline,
+  NewsScraperResponse,
+  NewsScraper,
+} from '../common/interfaces.js';
 
 const {
   LOGGING_FOX_SCRAPER,
@@ -17,7 +22,7 @@ export class FoxScraper implements NewsScraper {
     }
   }
 
-  async scrape(): Promise<NewsScraperResponse> {
+  async scrapePolitics(): Promise<NewsScraperResponse> {
     let headlines: NewsScraperResponseHeadline[] = [];
     let browser;
     try {
@@ -49,7 +54,13 @@ export class FoxScraper implements NewsScraper {
     this.logger.verbose('FoxScraper.scrape: %s', JSON.stringify(headlines, null, 2));
     return {
       source: 'fox',
+      type: NewsScraperType.POLITICS,
       headlines,
     }
+  }
+
+  async scrape(type: NewsScraperType = NewsScraperType.POLITICS): Promise<NewsScraperResponse> {
+    if (type === NewsScraperType.POLITICS) return this.scrapePolitics();
+    throw new Error(`scaping type: ${type} is not implemented yet`);
   }
 }
