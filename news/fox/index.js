@@ -23,11 +23,23 @@ export class FoxScraper {
             headlines = await page.evaluate(() => {
                 const data = [];
                 const headlines = document.querySelectorAll('.article-list .article .info .title');
-                headlines.forEach((headline) => {
-                    if (headline && headline.textContent) {
+                headlines.forEach((headlineElement) => {
+                    let href;
+                    let title;
+                    if (headlineElement) {
+                        const aElement = headlineElement.querySelector('a');
+                        if (aElement) {
+                            href = aElement.getAttribute('href');
+                            if (href)
+                                href = href.trim();
+                            if (aElement.textContent)
+                                title = aElement.textContent.trim();
+                        }
+                    }
+                    if (href && title) {
                         data.push({
-                            title: headline.textContent.trim(),
-                            url: '',
+                            title,
+                            url: `https://www.foxnews.com${href}`
                         });
                     }
                 });
