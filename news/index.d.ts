@@ -2,7 +2,7 @@ import {
   NewsScraper,
 } from './common/interfaces.js';
 
-declare enum NewsScraperType {
+export declare enum NewsScraperType {
   POLITICS = 'politics',
   SPORTS = 'sports',
 }
@@ -27,5 +27,3 @@ export declare class FoxScraper implements NewsScraper {
   constructor();
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }
-
-export { NewsScraperType };
