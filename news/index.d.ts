@@ -18,6 +18,11 @@ export declare type NewsScraperResponse = {
   headlines: NewsScraperResponseHeadline[];
 }
 
+export declare class APScraper implements NewsScraper {
+  constructor();
+  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
+}
+
 export declare class CNNScraper implements NewsScraper {
   constructor();
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;

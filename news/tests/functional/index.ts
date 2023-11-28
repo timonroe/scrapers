@@ -1,10 +1,16 @@
 import 'dotenv/config';
-import { CNNScraper, FoxScraper } from '../../index.js';
+import {
+  APScraper,
+  CNNScraper,
+  FoxScraper
+} from '../../index.js';
 
 (async () => {
+  const apScraper: APScraper = new APScraper();
   const cnnScraper: CNNScraper = new CNNScraper();
   const foxScraper: FoxScraper = new FoxScraper();
   const scrapers = [
+    apScraper,
     cnnScraper,
     foxScraper,
   ];
@@ -14,7 +20,7 @@ import { CNNScraper, FoxScraper } from '../../index.js';
       return scraper.scrape();
     }),
   );
-  console.log('results: ', JSON.stringify(results, null, 2));
+  // console.log('results: ', JSON.stringify(results, null, 2));
 
   const responses = results.map(result => {
     if (result.status === 'fulfilled') {

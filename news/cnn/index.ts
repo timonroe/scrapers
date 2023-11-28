@@ -59,16 +59,17 @@ export class CNNScraper implements NewsScraper {
         await browser.close();
       }
     }
-    this.logger.verbose('CNNScraper.scrape: %s', JSON.stringify(headlines, null, 2));
-    return {
+    const response = {
       source: 'cnn',
       type: NewsScraperType.POLITICS,
       headlines,
-    }
+    };
+    this.logger.verbose('CNNScraper.scrape: %s', JSON.stringify(response, null, 2));
+    return response;
   }
 
   async scrape(type: NewsScraperType = NewsScraperType.POLITICS): Promise<NewsScraperResponse> {
     if (type === NewsScraperType.POLITICS) return this.scrapePolitics();
-    throw new Error(`scaping type: ${type} is not implemented yet`);
+    throw new Error(`scaping type: ${type} is not implemented`);
   }
 }

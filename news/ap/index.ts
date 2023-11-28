@@ -8,14 +8,14 @@ import {
 } from '../common/interfaces.js';
 
 const {
-  LOGGING_FOX_SCRAPER,
+  LOGGING_AP_SCRAPER,
 } = process.env;
 
-export class FoxScraper implements NewsScraper {
+export class APScraper implements NewsScraper {
   logger: Logger;
 
   constructor() {
-    if (LOGGING_FOX_SCRAPER && LOGGING_FOX_SCRAPER === 'on') {
+    if (LOGGING_AP_SCRAPER && LOGGING_AP_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
       this.logger = new Logger({ logError: true });
@@ -28,33 +28,31 @@ export class FoxScraper implements NewsScraper {
     try {
       browser = await puppeteer.launch({ headless: 'new' });
       const page = await browser.newPage();
-      await page.goto('https://www.foxnews.com/politics');
-      await page.waitForSelector('.collection-article-list');  // Wait for it to load
+      await page.goto('https://apnews.com/politics');
+      await page.waitForSelector('.Page-oneColumn');  // Wait for it to load
       headlines = await page.evaluate(() => {
         const data: NewsScraperResponseHeadline[] = [];
-        const headlines = document.querySelectorAll('.article-list .article .info .title');
+        const headlines = document.querySelectorAll('.PagePromo-title .Link');
         headlines.forEach((headlineElement) => {
-          let href;
+          let href = headlineElement.getAttribute('href');
+          if (href) href = href.trim();
           let title;
-          if (headlineElement) {
-            const aElement = headlineElement.querySelector('a');
-            if (aElement) {
-              href = aElement.getAttribute('href');
-              if (href) href = href.trim();
-              if (aElement.textContent) title = aElement.textContent.trim();
-            }
+          const titleElement = headlineElement.querySelector('.PagePromoContentIcons-text');
+          if (titleElement) {
+            title = titleElement.textContent;
+            if (title) title = title.trim();
           }
           if (href && title) {
             data.push({
               title,
-              url: `https://www.foxnews.com${href}`
+              url: href,
             });
           }
         });
         return data;
-      });
+    });
     } catch (error: any) {
-      this.logger.error('FoxScraper.scrape error: %s', error.message);
+      this.logger.error('APScraper.scrape error: %s', error.message);
       throw error;
     } finally {
       if (browser) {
@@ -62,11 +60,11 @@ export class FoxScraper implements NewsScraper {
       }
     }
     const response = {
-      source: 'fox',
+      source: 'ap',
       type: NewsScraperType.POLITICS,
       headlines,
     };
-    this.logger.verbose('FoxScraper.scrape: %s', JSON.stringify(response, null, 2));
+    this.logger.verbose('APScraper.scrape: %s', JSON.stringify(response, null, 2));
     return response;
   }
 
