@@ -111,6 +111,7 @@
     "./ap/index.ts",
     "./cnn/index.ts",
     "./fox/index.ts",
+    "./wash-exam/index.ts",
     "./index.ts",
     "./tests/functional/index.ts"
   ],

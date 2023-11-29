@@ -1,26 +1,29 @@
 import 'dotenv/config';
 import {
+  NewsScraperType,
   APScraper,
   CNNScraper,
-  FoxScraper
+  FoxScraper,
+  WashExamScraper,
 } from '../../index.js';
 
 (async () => {
   const apScraper: APScraper = new APScraper();
   const cnnScraper: CNNScraper = new CNNScraper();
   const foxScraper: FoxScraper = new FoxScraper();
+  const washExamScraper: WashExamScraper = new WashExamScraper();
   const scrapers = [
     apScraper,
     cnnScraper,
     foxScraper,
+    washExamScraper,
   ];
 
   const results = await Promise.allSettled(
     scrapers.map(async (scraper) => {
-      return scraper.scrape();
+      return scraper.scrape(NewsScraperType.POLITICS);
     }),
   );
-  // console.log('results: ', JSON.stringify(results, null, 2));
 
   const responses = results.map(result => {
     if (result.status === 'fulfilled') {

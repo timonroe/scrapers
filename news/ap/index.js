@@ -1,10 +1,12 @@
 import { Logger } from '@soralinks/logger';
 import puppeteer from 'puppeteer';
-import { NewsScraperType, } from '../common/interfaces.js';
+import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
 const { LOGGING_AP_SCRAPER, } = process.env;
 export class APScraper {
+    source;
     logger;
     constructor() {
+        this.source = NewsScraperSource.AP;
         if (LOGGING_AP_SCRAPER && LOGGING_AP_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
@@ -53,16 +55,17 @@ export class APScraper {
                 await browser.close();
             }
         }
-        this.logger.verbose('APScraper.scrape: %s', JSON.stringify(headlines, null, 2));
-        return {
-            source: 'ap',
+        const response = {
+            source: this.source,
             type: NewsScraperType.POLITICS,
             headlines,
         };
+        this.logger.verbose('APScraper.scrape: %s', JSON.stringify(response, null, 2));
+        return response;
     }
     async scrape(type = NewsScraperType.POLITICS) {
         if (type === NewsScraperType.POLITICS)
             return this.scrapePolitics();
-        throw new Error(`scaping type: ${type} is not implemented yet`);
+        throw new Error(`scaping type: ${type} is not implemented`);
     }
 }

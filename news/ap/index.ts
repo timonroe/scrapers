@@ -1,6 +1,7 @@
 import { Logger } from '@soralinks/logger';
 import puppeteer from 'puppeteer';
 import {
+  NewsScraperSource,
   NewsScraperType,
   NewsScraperResponseHeadline,
   NewsScraperResponse,
@@ -12,9 +13,11 @@ const {
 } = process.env;
 
 export class APScraper implements NewsScraper {
+  source: NewsScraperSource;
   logger: Logger;
 
   constructor() {
+    this.source = NewsScraperSource.AP;
     if (LOGGING_AP_SCRAPER && LOGGING_AP_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
@@ -50,7 +53,7 @@ export class APScraper implements NewsScraper {
           }
         });
         return data;
-    });
+      });
     } catch (error: any) {
       this.logger.error('APScraper.scrape error: %s', error.message);
       throw error;
@@ -60,7 +63,7 @@ export class APScraper implements NewsScraper {
       }
     }
     const response = {
-      source: 'ap',
+      source: this.source,
       type: NewsScraperType.POLITICS,
       headlines,
     };

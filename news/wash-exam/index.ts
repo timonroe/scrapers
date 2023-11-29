@@ -9,16 +9,16 @@ import {
 } from '../common/interfaces.js';
 
 const {
-  LOGGING_CNN_SCRAPER,
+  LOGGING_WASH_EXAM_SCRAPER,
 } = process.env;
 
-export class CNNScraper implements NewsScraper {
+export class WashExamScraper implements NewsScraper {
   source: NewsScraperSource;
   logger: Logger;
 
   constructor() {
-    this.source = NewsScraperSource.CNN;
-    if (LOGGING_CNN_SCRAPER && LOGGING_CNN_SCRAPER === 'on') {
+    this.source = NewsScraperSource.WASH_EXAM;
+    if (LOGGING_WASH_EXAM_SCRAPER && LOGGING_WASH_EXAM_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
       this.logger = new Logger({ logError: true });
@@ -31,31 +31,27 @@ export class CNNScraper implements NewsScraper {
     try {
       browser = await puppeteer.launch({ headless: 'new' });
       const page = await browser.newPage();
-      await page.goto('https://www.cnn.com/politics');
-      await page.waitForSelector('.layout__main');  // Wait for it to load
+      await page.goto('https://www.washingtonexaminer.com/politics');
+      await page.waitForSelector('.SectionList-items-item');  // Wait for it to load
       headlines = await page.evaluate(() => {
         const data: NewsScraperResponseHeadline[] = [];
-        const headlines = document.querySelectorAll('.container_lead-plus-headlines__link');
+        const headlines = document.querySelectorAll('.SectionPromo-title .Link');
         headlines.forEach((headlineElement) => {
           let href = headlineElement.getAttribute('href');
           if (href) href = href.trim();
-          let title;
-          const titleElement = headlineElement.querySelector('.container__headline-text');
-          if (titleElement) {
-            title = titleElement.textContent;
-            if (title) title = title.trim();
-          }
+          let title = headlineElement.textContent;
+          if (title) title = title.trim();
           if (href && title) {
             data.push({
               title,
-              url: `https://www.cnn.com${href}`,
+              url: href,
             });
           }
         });
         return data;
       });
     } catch (error: any) {
-      this.logger.error('CNNScraper.scrape error: %s', error.message);
+      this.logger.error('WashExamScraper.scrape error: %s', error.message);
       throw error;
     } finally {
       if (browser) {
@@ -67,7 +63,7 @@ export class CNNScraper implements NewsScraper {
       type: NewsScraperType.POLITICS,
       headlines,
     };
-    this.logger.verbose('CNNScraper.scrape: %s', JSON.stringify(response, null, 2));
+    this.logger.verbose('WashExamScraper.scrape: %s', JSON.stringify(response, null, 2));
     return response;
   }
 

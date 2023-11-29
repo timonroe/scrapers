@@ -1,6 +1,7 @@
 import { Logger } from '@soralinks/logger';
 import puppeteer from 'puppeteer';
 import {
+  NewsScraperSource,
   NewsScraperType,
   NewsScraperResponseHeadline,
   NewsScraperResponse,
@@ -12,9 +13,11 @@ const {
 } = process.env;
 
 export class FoxScraper implements NewsScraper {
+  source: NewsScraperSource;
   logger: Logger;
 
   constructor() {
+    this.source = NewsScraperSource.FOX;
     if (LOGGING_FOX_SCRAPER && LOGGING_FOX_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
@@ -62,7 +65,7 @@ export class FoxScraper implements NewsScraper {
       }
     }
     const response = {
-      source: 'fox',
+      source: this.source,
       type: NewsScraperType.POLITICS,
       headlines,
     };

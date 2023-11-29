@@ -1,13 +1,13 @@
 import { Logger } from '@soralinks/logger';
 import puppeteer from 'puppeteer';
 import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
-const { LOGGING_FOX_SCRAPER, } = process.env;
-export class FoxScraper {
+const { LOGGING_WASH_EXAM_SCRAPER, } = process.env;
+export class WashExamScraper {
     source;
     logger;
     constructor() {
-        this.source = NewsScraperSource.FOX;
-        if (LOGGING_FOX_SCRAPER && LOGGING_FOX_SCRAPER === 'on') {
+        this.source = NewsScraperSource.WASH_EXAM;
+        if (LOGGING_WASH_EXAM_SCRAPER && LOGGING_WASH_EXAM_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
         else {
@@ -20,28 +20,22 @@ export class FoxScraper {
         try {
             browser = await puppeteer.launch({ headless: 'new' });
             const page = await browser.newPage();
-            await page.goto('https://www.foxnews.com/politics');
-            await page.waitForSelector('.collection-article-list'); // Wait for it to load
+            await page.goto('https://www.washingtonexaminer.com/politics');
+            await page.waitForSelector('.SectionList-items-item'); // Wait for it to load
             headlines = await page.evaluate(() => {
                 const data = [];
-                const headlines = document.querySelectorAll('.article-list .article .info .title');
+                const headlines = document.querySelectorAll('.SectionPromo-title .Link');
                 headlines.forEach((headlineElement) => {
-                    let href;
-                    let title;
-                    if (headlineElement) {
-                        const aElement = headlineElement.querySelector('a');
-                        if (aElement) {
-                            href = aElement.getAttribute('href');
-                            if (href)
-                                href = href.trim();
-                            if (aElement.textContent)
-                                title = aElement.textContent.trim();
-                        }
-                    }
+                    let href = headlineElement.getAttribute('href');
+                    if (href)
+                        href = href.trim();
+                    let title = headlineElement.textContent;
+                    if (title)
+                        title = title.trim();
                     if (href && title) {
                         data.push({
                             title,
-                            url: `https://www.foxnews.com${href}`
+                            url: href,
                         });
                     }
                 });
@@ -49,7 +43,7 @@ export class FoxScraper {
             });
         }
         catch (error) {
-            this.logger.error('FoxScraper.scrape error: %s', error.message);
+            this.logger.error('WashExamScraper.scrape error: %s', error.message);
             throw error;
         }
         finally {
@@ -62,7 +56,7 @@ export class FoxScraper {
             type: NewsScraperType.POLITICS,
             headlines,
         };
-        this.logger.verbose('FoxScraper.scrape: %s', JSON.stringify(response, null, 2));
+        this.logger.verbose('WashExamScraper.scrape: %s', JSON.stringify(response, null, 2));
         return response;
     }
     async scrape(type = NewsScraperType.POLITICS) {
