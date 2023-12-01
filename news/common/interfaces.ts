@@ -10,7 +10,7 @@ export enum NewsScraperType {
   SPORTS = 'sports',
 };
 
-export type NewsScraperResponseHeadline = {
+export type NewsScraperHeadline = {
   title: string;
   url: string;
 };
@@ -18,7 +18,7 @@ export type NewsScraperResponseHeadline = {
 export type NewsScraperResponse = {
   source: NewsScraperSource;
   type: NewsScraperType,
-  headlines: NewsScraperResponseHeadline[];
+  headlines: NewsScraperHeadline[];
 };
 
 export interface NewsScraper {

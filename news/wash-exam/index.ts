@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer';
 import {
   NewsScraperSource,
   NewsScraperType,
-  NewsScraperResponseHeadline,
+  NewsScraperHeadline,
   NewsScraperResponse,
   NewsScraper,
 } from '../common/interfaces.js';
@@ -26,7 +26,7 @@ export class WashExamScraper implements NewsScraper {
   }
 
   async scrapePolitics(): Promise<NewsScraperResponse> {
-    let headlines: NewsScraperResponseHeadline[] = [];
+    let headlines: NewsScraperHeadline[] = [];
     let browser;
     try {
       browser = await puppeteer.launch({ headless: 'new' });
@@ -34,7 +34,7 @@ export class WashExamScraper implements NewsScraper {
       await page.goto('https://www.washingtonexaminer.com/politics');
       await page.waitForSelector('.SectionList-items-item');  // Wait for it to load
       headlines = await page.evaluate(() => {
-        const data: NewsScraperResponseHeadline[] = [];
+        const data: NewsScraperHeadline[] = [];
         const headlines = document.querySelectorAll('.SectionPromo-title .Link');
         headlines.forEach((headlineElement) => {
           let href = headlineElement.getAttribute('href');

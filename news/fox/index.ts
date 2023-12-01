@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer';
 import {
   NewsScraperSource,
   NewsScraperType,
-  NewsScraperResponseHeadline,
+  NewsScraperHeadline,
   NewsScraperResponse,
   NewsScraper,
 } from '../common/interfaces.js';
@@ -26,7 +26,7 @@ export class FoxScraper implements NewsScraper {
   }
 
   async scrapePolitics(): Promise<NewsScraperResponse> {
-    let headlines: NewsScraperResponseHeadline[] = [];
+    let headlines: NewsScraperHeadline[] = [];
     let browser;
     try {
       browser = await puppeteer.launch({ headless: 'new' });
@@ -34,7 +34,7 @@ export class FoxScraper implements NewsScraper {
       await page.goto('https://www.foxnews.com/politics');
       await page.waitForSelector('.collection-article-list');  // Wait for it to load
       headlines = await page.evaluate(() => {
-        const data: NewsScraperResponseHeadline[] = [];
+        const data: NewsScraperHeadline[] = [];
         const headlines = document.querySelectorAll('.article-list .article .info .title');
         headlines.forEach((headlineElement) => {
           let href;

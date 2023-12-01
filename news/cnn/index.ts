@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer';
 import {
   NewsScraperSource,
   NewsScraperType,
-  NewsScraperResponseHeadline,
+  NewsScraperHeadline,
   NewsScraperResponse,
   NewsScraper,
 } from '../common/interfaces.js';
@@ -26,7 +26,7 @@ export class CNNScraper implements NewsScraper {
   }
 
   async scrapePolitics(): Promise<NewsScraperResponse> {
-    let headlines: NewsScraperResponseHeadline[] = [];
+    let headlines: NewsScraperHeadline[] = [];
     let browser;
     try {
       browser = await puppeteer.launch({ headless: 'new' });
@@ -34,7 +34,7 @@ export class CNNScraper implements NewsScraper {
       await page.goto('https://www.cnn.com/politics');
       await page.waitForSelector('.layout__main');  // Wait for it to load
       headlines = await page.evaluate(() => {
-        const data: NewsScraperResponseHeadline[] = [];
+        const data: NewsScraperHeadline[] = [];
         const headlines = document.querySelectorAll('.container_lead-plus-headlines__link');
         headlines.forEach((headlineElement) => {
           let href = headlineElement.getAttribute('href');

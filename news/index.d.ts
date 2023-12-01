@@ -14,7 +14,7 @@ export declare enum NewsScraperType {
   SPORTS = 'sports',
 }
 
-export declare type NewsScraperResponseHeadline = {
+export declare type NewsScraperHeadline = {
   title: string;
   url: string;
 }
@@ -22,7 +22,7 @@ export declare type NewsScraperResponseHeadline = {
 export declare type NewsScraperResponse = {
   source: NewsScraperSource;
   type: NewsScraperType,
-  headlines: NewsScraperResponseHeadline[];
+  headlines: NewsScraperHeadline[];
 }
 
 export declare class APScraper implements NewsScraper {
