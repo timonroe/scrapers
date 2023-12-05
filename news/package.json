@@ -1,6 +1,6 @@
 {
   "name": "@soralinks/news-scrapers",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Scraping news organizations' websites for headlines",
   "author": "Tim Monroe <timonroe12@gmail.com>",
   "types": "./index.d.ts",
@@ -13,7 +13,8 @@
     "url": "https://github.com/timonroe/scrapers"
   },
   "scripts": {
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "postinstall": "playwright install"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "@soralinks/logger": "0.0.9",
+    "playwright": "^1.40.1",
     "puppeteer": "^21.5.0"
   }
 }
