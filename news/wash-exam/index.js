@@ -1,5 +1,5 @@
 import { Logger } from '@soralinks/logger';
-import puppeteer from 'puppeteer';
+import { chromium } from 'playwright';
 import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
 const { LOGGING_WASH_EXAM_SCRAPER, } = process.env;
 export class WashExamScraper {
@@ -18,29 +18,29 @@ export class WashExamScraper {
         let headlines = [];
         let browser;
         try {
-            browser = await puppeteer.launch({ headless: 'new' });
+            browser = await chromium.launch();
             const page = await browser.newPage();
-            await page.goto('https://www.washingtonexaminer.com/politics');
-            await page.waitForSelector('.SectionList-items-item'); // Wait for it to load
-            headlines = await page.evaluate(() => {
-                const data = [];
-                const headlines = document.querySelectorAll('.SectionPromo-title .Link');
-                headlines.forEach((headlineElement) => {
-                    let href = headlineElement.getAttribute('href');
-                    if (href)
-                        href = href.trim();
-                    let title = headlineElement.textContent;
-                    if (title)
-                        title = title.trim();
-                    if (href && title) {
-                        data.push({
-                            title,
-                            url: href,
-                        });
-                    }
-                });
-                return data;
-            });
+            const response = await page.goto('https://www.washingtonexaminer.com/politics', { waitUntil: 'domcontentloaded' });
+            if (!response || !response.ok()) {
+                throw new Error(`page.goto() returned status: ${response?.status()}, statusText: ${response?.statusText()}`);
+            }
+            await page.waitForSelector('.SectionList-items-item');
+            const headlineElements = await page.$$('.SectionPromo-title .Link');
+            for (let x = 0; x < headlineElements.length; x++) {
+                const headlineElement = headlineElements[x];
+                let href = await headlineElement.getAttribute('href');
+                if (href)
+                    href = href.trim();
+                let title = await headlineElement.textContent();
+                if (title)
+                    title = title.trim();
+                if (href && title) {
+                    headlines.push({
+                        title,
+                        url: href,
+                    });
+                }
+            }
         }
         catch (error) {
             this.logger.error('WashExamScraper.scrape error: %s', error.message);
