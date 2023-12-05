@@ -1,5 +1,5 @@
 import { Logger } from '@soralinks/logger';
-import puppeteer from 'puppeteer';
+import { chromium } from 'playwright';
 import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
 const { LOGGING_AP_SCRAPER, } = process.env;
 export class APScraper {
@@ -18,33 +18,33 @@ export class APScraper {
         let headlines = [];
         let browser;
         try {
-            browser = await puppeteer.launch({ headless: 'new' });
+            browser = await chromium.launch();
             const page = await browser.newPage();
-            await page.goto('https://apnews.com/politics');
-            await page.waitForSelector('.Page-oneColumn'); // Wait for it to load
-            headlines = await page.evaluate(() => {
-                const data = [];
-                const headlines = document.querySelectorAll('.PagePromo-title .Link');
-                headlines.forEach((headlineElement) => {
-                    let href = headlineElement.getAttribute('href');
-                    if (href)
-                        href = href.trim();
-                    let title;
-                    const titleElement = headlineElement.querySelector('.PagePromoContentIcons-text');
-                    if (titleElement) {
-                        title = titleElement.textContent;
-                        if (title)
-                            title = title.trim();
-                    }
-                    if (href && title) {
-                        data.push({
-                            title,
-                            url: href,
-                        });
-                    }
-                });
-                return data;
-            });
+            const response = await page.goto('https://apnews.com/politics', { waitUntil: 'domcontentloaded' });
+            if (!response || !response.ok()) {
+                throw new Error(`page.goto() returned status: ${response?.status()}, statusText: ${response?.statusText()}`);
+            }
+            await page.waitForSelector('.PagePromo-title .Link');
+            const headlineElements = await page.$$('.PagePromo-title .Link');
+            for (let x = 0; x < headlineElements.length; x++) {
+                const headlineElement = headlineElements[x];
+                let href = await headlineElement.getAttribute('href');
+                if (href)
+                    href = href.trim();
+                let title;
+                const titleElement = await headlineElement.$('.PagePromoContentIcons-text');
+                if (titleElement) {
+                    title = await titleElement.textContent();
+                    if (title)
+                        title = title.trim();
+                }
+                if (href && title) {
+                    headlines.push({
+                        title,
+                        url: href,
+                    });
+                }
+            }
         }
         catch (error) {
             this.logger.error('APScraper.scrape error: %s', error.message);
