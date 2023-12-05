@@ -1,5 +1,5 @@
 import { Logger } from '@soralinks/logger';
-import puppeteer from 'puppeteer';
+import { chromium } from 'playwright';
 import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
 const { LOGGING_CNN_SCRAPER, } = process.env;
 export class CNNScraper {
@@ -18,33 +18,33 @@ export class CNNScraper {
         let headlines = [];
         let browser;
         try {
-            browser = await puppeteer.launch({ headless: 'new' });
+            browser = await chromium.launch();
             const page = await browser.newPage();
-            await page.goto('https://www.cnn.com/politics');
-            await page.waitForSelector('.layout__main'); // Wait for it to load
-            headlines = await page.evaluate(() => {
-                const data = [];
-                const headlines = document.querySelectorAll('.container_lead-plus-headlines__link');
-                headlines.forEach((headlineElement) => {
-                    let href = headlineElement.getAttribute('href');
-                    if (href)
-                        href = href.trim();
-                    let title;
-                    const titleElement = headlineElement.querySelector('.container__headline-text');
-                    if (titleElement) {
-                        title = titleElement.textContent;
-                        if (title)
-                            title = title.trim();
-                    }
-                    if (href && title) {
-                        data.push({
-                            title,
-                            url: `https://www.cnn.com${href}`,
-                        });
-                    }
-                });
-                return data;
-            });
+            const response = await page.goto('https://www.cnn.com/politics', { waitUntil: 'domcontentloaded' });
+            if (!response || !response.ok()) {
+                throw new Error(`page.goto() returned status: ${response?.status()}, statusText: ${response?.statusText()}`);
+            }
+            await page.waitForSelector('.layout__main');
+            const headlineElements = await page.$$('.container_lead-plus-headlines__link');
+            for (let x = 0; x < headlineElements.length; x++) {
+                const headlineElement = headlineElements[x];
+                let href = await headlineElement.getAttribute('href');
+                if (href)
+                    href = href.trim();
+                let title;
+                const titleElement = await headlineElement.$('.container__headline-text');
+                if (titleElement) {
+                    title = await titleElement.textContent();
+                    if (title)
+                        title = title.trim();
+                }
+                if (href && title) {
+                    headlines.push({
+                        title,
+                        url: `https://www.cnn.com${href}`,
+                    });
+                }
+            }
         }
         catch (error) {
             this.logger.error('CNNScraper.scrape error: %s', error.message);
