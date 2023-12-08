@@ -1,5 +1,5 @@
 import { Logger } from '@soralinks/logger';
-import { chromium } from 'playwright';
+import playwright from 'playwright-aws-lambda';
 import {
   NewsScraperSource,
   NewsScraperType,
@@ -29,8 +29,9 @@ export class APScraper implements NewsScraper {
     let headlines: NewsScraperHeadline[] = [];
     let browser;
     try {
-      browser = await chromium.launch();
-      const page = await browser.newPage();
+      browser = await playwright.launchChromium();
+      const context = await browser.newContext();
+      const page = await context.newPage();
       const response = await page.goto('https://apnews.com/politics', { waitUntil: 'domcontentloaded' });
       if (!response || !response.ok()) {
         throw new Error(`page.goto() returned status: ${response?.status()}, statusText: ${response?.statusText()}`);
