@@ -1,5 +1,5 @@
 import { Logger } from '@soralinks/logger';
-import playwright from 'playwright-aws-lambda';
+import * as cheerio from 'cheerio';
 import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
 const { LOGGING_AP_SCRAPER, } = process.env;
 export class APScraper {
@@ -16,45 +16,41 @@ export class APScraper {
     }
     async scrapePolitics() {
         let headlines = [];
-        let browser;
         try {
-            browser = await playwright.launchChromium();
-            const context = await browser.newContext();
-            const page = await context.newPage();
-            const response = await page.goto('https://apnews.com/politics', { waitUntil: 'domcontentloaded' });
-            if (!response || !response.ok()) {
-                throw new Error(`page.goto() returned status: ${response?.status()}, statusText: ${response?.statusText()}`);
-            }
-            await page.waitForSelector('.PagePromo-title .Link');
-            const headlineElements = await page.$$('.PagePromo-title .Link');
+            const response = await fetch('https://apnews.com/politics');
+            const htmlDocument = await response.text();
+            const $ = cheerio.load(htmlDocument, null, false);
+            const headlineElements = $('.PagePromo-title .Link');
             for (let x = 0; x < headlineElements.length; x++) {
                 const headlineElement = headlineElements[x];
-                let href = await headlineElement.getAttribute('href');
-                if (href)
-                    href = href.trim();
-                let title;
-                const titleElement = await headlineElement.$('.PagePromoContentIcons-text');
-                if (titleElement) {
-                    title = await titleElement.textContent();
-                    if (title)
-                        title = title.trim();
-                }
-                if (href && title) {
-                    headlines.push({
-                        title,
-                        url: href,
-                    });
-                }
+                let href = $(headlineElement).attr('href');
+                if (!href)
+                    continue;
+                href = href.trim();
+                if (!href)
+                    continue;
+                const url = href.includes('https') ? href : `https://www.apnews.com${href}`;
+                // Get rid of dups
+                if (headlines.find(headline => headline.url === href))
+                    continue;
+                const titleElement = $(headlineElement, '.PagePromoContentIcons-text');
+                if (!titleElement)
+                    continue;
+                let title = $(titleElement).text();
+                if (!title)
+                    continue;
+                title = title.trim();
+                if (!title)
+                    continue;
+                headlines.push({
+                    title,
+                    url,
+                });
             }
         }
         catch (error) {
             this.logger.error('APScraper.scrape error: %s', error.message);
             throw error;
-        }
-        finally {
-            if (browser) {
-                await browser.close();
-            }
         }
         const response = {
             source: this.source,

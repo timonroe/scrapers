@@ -1,5 +1,5 @@
 import { Logger } from '@soralinks/logger';
-import playwright from 'playwright-aws-lambda';
+import * as cheerio from 'cheerio';
 import {
   NewsScraperSource,
   NewsScraperType,
@@ -27,44 +27,32 @@ export class FoxScraper implements NewsScraper {
 
   async scrapePolitics(): Promise<NewsScraperResponse> {
     let headlines: NewsScraperHeadline[] = [];
-    let browser;
     try {
-      browser = await playwright.launchChromium();
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      const response = await page.goto('https://www.foxnews.com/politics', { waitUntil: 'domcontentloaded' });
-      if (!response || !response.ok()) {
-        throw new Error(`page.goto() returned status: ${response?.status()}, statusText: ${response?.statusText()}`);
-      }
-      await page.waitForSelector('.collection-article-list');
-      const headlineElements = await page.$$('.article-list .article .info .title');
+      const response = await fetch('https://www.foxnews.com/politics');
+      const htmlDocument = await response.text();
+      const $ = cheerio.load(htmlDocument);
+      const headlineElements = $('.article-list .article .info .title a');
       for (let x = 0; x < headlineElements.length; x++) {
         const headlineElement = headlineElements[x];
-        let href;
-        let title;
-        if (headlineElement) {
-          const aElement = await headlineElement.$('a');
-          if (aElement) {
-            href = await aElement.getAttribute('href');
-            if (href) href = href.trim();
-            title = await aElement.textContent();
-            if (title) title = title.trim();
-          }
-        }
-        if (href && title) {
-          headlines.push({
-            title,
-            url: `https://www.foxnews.com${href}`
-          });
-        }
+        let href = $(headlineElement).attr('href');
+        if (!href) continue;
+        href = href.trim();
+        if (!href) continue;
+        const url = href.includes('https') ? href : `https://www.foxnews.com${href}`;
+        // Get rid of dups
+        if (headlines.find(headline => headline.url === url)) continue;
+        let title = $(headlineElement).text();
+        if (!title) continue;
+        title = title.trim();
+        if (!title) continue;    
+        headlines.push({
+          title,
+          url,
+        });
       }
     } catch (error: any) {
       this.logger.error('FoxScraper.scrape error: %s', error.message);
       throw error;
-    } finally {
-      if (browser) {
-        await browser.close();
-      }
     }
     const response = {
       source: this.source,
