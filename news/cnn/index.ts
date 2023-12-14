@@ -40,8 +40,8 @@ export class CNNScraper implements NewsScraper {
         if (!href) continue;
         const url = href.includes('https') ? href : `https://www.cnn.com${href}`;
         if (headlines.find(headline => headline.url === url)) continue;  // Get rid of dups
-        const spanElement = headlineElement.find('div > div > span');
-        let title = spanElement.text();
+        const titleElement = headlineElement.find('div > div > span');
+        let title = titleElement.text();
         if (!title) continue;
         title = title.trim();
         if (!title) continue;
