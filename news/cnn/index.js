@@ -1,5 +1,6 @@
 import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
+import fetch from 'node-fetch';
 import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
 const { LOGGING_CNN_SCRAPER, } = process.env;
 export class CNNScraper {

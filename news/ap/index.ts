@@ -1,5 +1,6 @@
 import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
+import fetch from 'node-fetch';
 import {
   NewsScraperSource,
   NewsScraperType,
