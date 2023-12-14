@@ -22,18 +22,17 @@ export class FoxScraper {
             const $ = cheerio.load(htmlDocument);
             const headlineElements = $('.article-list .article .info .title a');
             for (let x = 0; x < headlineElements.length; x++) {
-                const headlineElement = headlineElements[x];
-                let href = $(headlineElement).attr('href');
+                const headlineElement = $(headlineElements[x]); // Convert the current element to a Cheerio object
+                let href = headlineElement.attr('href');
                 if (!href)
                     continue;
                 href = href.trim();
                 if (!href)
                     continue;
                 const url = href.includes('https') ? href : `https://www.foxnews.com${href}`;
-                // Get rid of dups
                 if (headlines.find(headline => headline.url === url))
-                    continue;
-                let title = $(headlineElement).text();
+                    continue; // Get rid of dups
+                let title = headlineElement.text();
                 if (!title)
                     continue;
                 title = title.trim();
