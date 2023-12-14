@@ -22,21 +22,20 @@ export class APScraper {
             const $ = cheerio.load(htmlDocument, null, false);
             const headlineElements = $('.PagePromo-title .Link');
             for (let x = 0; x < headlineElements.length; x++) {
-                const headlineElement = headlineElements[x];
-                let href = $(headlineElement).attr('href');
+                const headlineElement = $(headlineElements[x]); // Convert the current element to a Cheerio object
+                let href = headlineElement.attr('href');
                 if (!href)
                     continue;
                 href = href.trim();
                 if (!href)
                     continue;
                 const url = href.includes('https') ? href : `https://www.apnews.com${href}`;
-                // Get rid of dups
                 if (headlines.find(headline => headline.url === href))
-                    continue;
-                const titleElement = $(headlineElement, '.PagePromoContentIcons-text');
+                    continue; // Get rid of dups
+                const titleElement = headlineElement.find('.PagePromoContentIcons-text');
                 if (!titleElement)
                     continue;
-                let title = $(titleElement).text();
+                let title = titleElement.text();
                 if (!title)
                     continue;
                 title = title.trim();
