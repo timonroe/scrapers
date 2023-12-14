@@ -19,24 +19,21 @@ export class CNNScraper {
         try {
             const response = await fetch('https://www.cnn.com/politics');
             const htmlDocument = await response.text();
-            const $ = cheerio.load(htmlDocument, null, false);
-            const headlineElements = $('.container_lead-plus-headlines__link');
+            const $ = cheerio.load(htmlDocument);
+            const headlineElements = $('a.container_lead-plus-headlines__link');
             for (let x = 0; x < headlineElements.length; x++) {
-                const headlineElement = headlineElements[x];
-                let href = $(headlineElement).attr('href');
+                const headlineElement = $(headlineElements[x]); // Convert the current element to a Cheerio object
+                let href = headlineElement.attr('href');
                 if (!href)
                     continue;
                 href = href.trim();
                 if (!href)
                     continue;
                 const url = href.includes('https') ? href : `https://www.cnn.com${href}`;
-                // Get rid of dups
                 if (headlines.find(headline => headline.url === url))
-                    continue;
-                const titleElement = $(headlineElement, '.container__headline-text');
-                if (!titleElement)
-                    continue;
-                let title = $(titleElement).text();
+                    continue; // Get rid of dups
+                const spanElement = headlineElement.find('div > div > span');
+                let title = spanElement.text();
                 if (!title)
                     continue;
                 title = title.trim();
