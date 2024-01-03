@@ -1,38 +1,34 @@
 import 'dotenv/config';
 import {
   NewsScraperType,
-  NewsScraperSource,
+  NewsScraperSources,
   NewsScraperResponse,
   APScraper,
   CNNScraper,
   FoxScraper,
   WashExamScraper,
+  newsScraperSources,
 } from '../../index.js';
 
-function createScrapers(sources: NewsScraperSource[]): any[] {
-  return sources.map(source => {
-    if (source === NewsScraperSource.AP) return new APScraper();
-    else if (source === NewsScraperSource.CNN) return new CNNScraper();
-    else if (source === NewsScraperSource.FOX) return new FoxScraper();
-    else if (source === NewsScraperSource.WASH_EXAM) return new WashExamScraper();
+function createScrapers(sources: NewsScraperSources): any[] {
+  return Object.values(sources).map(source => {
+    if (source.name === newsScraperSources.AP.name) return new APScraper();
+    else if (source.name === newsScraperSources.CNN.name) return new CNNScraper();
+    else if (source.name === newsScraperSources.EPOCH_TIMES.name) return undefined;
+    else if (source.name === newsScraperSources.FOX.name) return new FoxScraper();
+    else if (source.name === newsScraperSources.WASH_EXAM.name) return new WashExamScraper();
     else throw new Error(`news scraper source: ${source} is invalid`);
-  });
+  }).filter(Boolean);
 }
 
 (async () => {
-  const sources: NewsScraperSource[] = [
-    NewsScraperSource.AP,
-    NewsScraperSource.CNN,
-    NewsScraperSource.FOX,
-    NewsScraperSource.WASH_EXAM
-  ];
-  const scrapers = createScrapers(sources);
+  const sources: NewsScraperSources = newsScraperSources;
+  const scrapers = createScrapers(newsScraperSources);
   const results = await Promise.allSettled(
     scrapers.map(async (scraper) => {
       return scraper.scrape(NewsScraperType.POLITICS);
     }),
   );
-
   const scraperResponses: NewsScraperResponse[] = results.map(result => {
     if (result.status === 'fulfilled') {
       return result.value;

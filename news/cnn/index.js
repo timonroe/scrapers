@@ -1,13 +1,14 @@
 import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
-import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
+import { NewsScraperType, } from '../common/types.js';
+import { newsScraperSources, } from '../common/sources.js';
 const { LOGGING_CNN_SCRAPER, } = process.env;
 export class CNNScraper {
     source;
     logger;
     constructor() {
-        this.source = NewsScraperSource.CNN;
+        this.source = newsScraperSources.CNN;
         if (LOGGING_CNN_SCRAPER && LOGGING_CNN_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
@@ -18,7 +19,7 @@ export class CNNScraper {
     async scrapePolitics() {
         let headlines = [];
         try {
-            const response = await fetch('https://www.cnn.com/politics');
+            const response = await fetch(this.source.urlPolitics);
             const htmlDocument = await response.text();
             const $ = cheerio.load(htmlDocument);
             const headlineElements = $('a.container_lead-plus-headlines__link');
@@ -30,7 +31,7 @@ export class CNNScraper {
                 href = href.trim();
                 if (!href)
                     continue;
-                const url = href.includes('https') ? href : `https://www.cnn.com${href}`;
+                const url = href.includes('https') ? href : `${this.source.url}${href}`;
                 if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dups
                 const titleElement = headlineElement.find('div > div > span');
@@ -53,8 +54,8 @@ export class CNNScraper {
             throw error;
         }
         const response = {
-            source: this.source,
             type: NewsScraperType.POLITICS,
+            source: this.source,
             headlines,
         };
         this.logger.verbose('CNNScraper.scrape: %s', JSON.stringify(response, null, 2));

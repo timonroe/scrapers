@@ -13,16 +13,16 @@ import {
 } from '../common/sources.js';
 
 const {
-  LOGGING_AP_SCRAPER,
+  LOGGING_EPOCH_TIMES_SCRAPER,
 } = process.env;
 
-export class APScraper implements NewsScraper {
+export class EpochTimesScraper implements NewsScraper {
   source: NewsScraperSource;
   logger: Logger;
 
   constructor() {
-    this.source = newsScraperSources.AP;
-    if (LOGGING_AP_SCRAPER && LOGGING_AP_SCRAPER === 'on') {
+    this.source = newsScraperSources.EPOCH_TIMES;
+    if (LOGGING_EPOCH_TIMES_SCRAPER && LOGGING_EPOCH_TIMES_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
       this.logger = new Logger({ logError: true });
@@ -34,8 +34,8 @@ export class APScraper implements NewsScraper {
     try {
       const response = await fetch(this.source.urlPolitics);
       const htmlDocument = await response.text();
-      const $ = cheerio.load(htmlDocument, null, false);
-      const headlineElements = $('.PagePromo-title .Link');
+      const $ = cheerio.load(htmlDocument);
+      const headlineElements = $('.SectionPromo-title .Link');
       for (let x = 0; x < headlineElements.length; x++) {
         const headlineElement = $(headlineElements[x]);  // Convert the current element to a Cheerio object
         let href = headlineElement.attr('href');
@@ -43,20 +43,18 @@ export class APScraper implements NewsScraper {
         href = href.trim();
         if (!href) continue;
         const url = href.includes('https') ? href : `${this.source.url}${href}`;
-        if (headlines.find(headline => headline.url === href)) continue;  // Get rid of dups
-        const titleElement = headlineElement.find('.PagePromoContentIcons-text');
-        if (!titleElement) continue;
-        let title = titleElement.text();
+        if (headlines.find(headline => headline.url === url)) continue;  // Get rid of dups
+        let title = headlineElement.text();
         if (!title) continue;
         title = title.trim();
-        if (!title) continue;
+        if (!title) continue;    
         headlines.push({
           title,
           url,
         });
       }
     } catch (error: any) {
-      this.logger.error('APScraper.scrape error: %s', error.message);
+      this.logger.error('WashExamScraper.scrape error: %s', error.message);
       throw error;
     }
     const response = {
@@ -64,7 +62,7 @@ export class APScraper implements NewsScraper {
       source: this.source,
       headlines,
     };
-    this.logger.verbose('APScraper.scrape: %s', JSON.stringify(response, null, 2));
+    this.logger.verbose('WashExamScraper.scrape: %s', JSON.stringify(response, null, 2));
     return response;
   }
 

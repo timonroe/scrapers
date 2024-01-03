@@ -1,13 +1,21 @@
-export enum NewsScraperSource {
-  AP = 'Associated Press',
-  CNN = 'Cable News Network',
-  FOX = 'Fox News',
-  WASH_EXAM = 'Washington Examiner',
-};
-
 export enum NewsScraperType {
   POLITICS = 'politics',
   SPORTS = 'sports',
+};
+
+export type NewsScraperSource = {
+  name: string,
+  shortName: string,
+  url: string,
+  urlPolitics: string,
+};
+
+export type NewsScraperSources = {
+  AP: NewsScraperSource,
+  CNN: NewsScraperSource,
+  EPOCH_TIMES: NewsScraperSource,
+  FOX: NewsScraperSource,
+  WASH_EXAM: NewsScraperSource,
 };
 
 export type NewsScraperHeadline = {
@@ -16,8 +24,8 @@ export type NewsScraperHeadline = {
 };
 
 export type NewsScraperResponse = {
-  source: NewsScraperSource;
   type: NewsScraperType,
+  source: NewsScraperSource;
   headlines: NewsScraperHeadline[];
 };
 

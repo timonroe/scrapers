@@ -1,13 +1,14 @@
 import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
-import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
+import { NewsScraperType, } from '../common/types.js';
+import { newsScraperSources, } from '../common/sources.js';
 const { LOGGING_FOX_SCRAPER, } = process.env;
 export class FoxScraper {
     source;
     logger;
     constructor() {
-        this.source = NewsScraperSource.FOX;
+        this.source = newsScraperSources.FOX;
         if (LOGGING_FOX_SCRAPER && LOGGING_FOX_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
@@ -18,7 +19,7 @@ export class FoxScraper {
     async scrapePolitics() {
         let headlines = [];
         try {
-            const response = await fetch('https://www.foxnews.com/politics');
+            const response = await fetch(this.source.urlPolitics);
             const htmlDocument = await response.text();
             const $ = cheerio.load(htmlDocument);
             const headlineElements = $('.article-list .article .info .title a');
@@ -30,7 +31,7 @@ export class FoxScraper {
                 href = href.trim();
                 if (!href)
                     continue;
-                const url = href.includes('https') ? href : `https://www.foxnews.com${href}`;
+                const url = href.includes('https') ? href : `${this.source.url}${href}`;
                 if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dups
                 let title = headlineElement.text();
@@ -50,8 +51,8 @@ export class FoxScraper {
             throw error;
         }
         const response = {
-            source: this.source,
             type: NewsScraperType.POLITICS,
+            source: this.source,
             headlines,
         };
         this.logger.verbose('FoxScraper.scrape: %s', JSON.stringify(response, null, 2));

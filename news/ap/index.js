@@ -1,13 +1,14 @@
 import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
-import { NewsScraperSource, NewsScraperType, } from '../common/interfaces.js';
+import { NewsScraperType, } from '../common/types.js';
+import { newsScraperSources, } from '../common/sources.js';
 const { LOGGING_AP_SCRAPER, } = process.env;
 export class APScraper {
     source;
     logger;
     constructor() {
-        this.source = NewsScraperSource.AP;
+        this.source = newsScraperSources.AP;
         if (LOGGING_AP_SCRAPER && LOGGING_AP_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
@@ -18,7 +19,7 @@ export class APScraper {
     async scrapePolitics() {
         let headlines = [];
         try {
-            const response = await fetch('https://apnews.com/politics');
+            const response = await fetch(this.source.urlPolitics);
             const htmlDocument = await response.text();
             const $ = cheerio.load(htmlDocument, null, false);
             const headlineElements = $('.PagePromo-title .Link');
@@ -30,7 +31,7 @@ export class APScraper {
                 href = href.trim();
                 if (!href)
                     continue;
-                const url = href.includes('https') ? href : `https://www.apnews.com${href}`;
+                const url = href.includes('https') ? href : `${this.source.url}${href}`;
                 if (headlines.find(headline => headline.url === href))
                     continue; // Get rid of dups
                 const titleElement = headlineElement.find('.PagePromoContentIcons-text');
@@ -53,8 +54,8 @@ export class APScraper {
             throw error;
         }
         const response = {
-            source: this.source,
             type: NewsScraperType.POLITICS,
+            source: this.source,
             headlines,
         };
         this.logger.verbose('APScraper.scrape: %s', JSON.stringify(response, null, 2));

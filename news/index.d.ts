@@ -1,18 +1,24 @@
-import {
-  NewsScraper,
-} from './common/interfaces.js';
+import { NewsScraper } from './common/types.js';
 
 export declare enum NewsScraperType {
   POLITICS = 'politics',
   SPORTS = 'sports',
 }
 
-export declare enum NewsScraperSource {
-  AP = 'Associated Press',
-  CNN = 'Cable News Network',
-  FOX = 'Fox News',
-  WASH_EXAM = 'Washington Examiner',
-}
+export declare type NewsScraperSource = {
+  name: string,
+  shortName: string,
+  url: string,
+  urlPolitics: string,
+};
+
+export declare type NewsScraperSources = {
+  AP: NewsScraperSource,
+  CNN: NewsScraperSource,
+  EPOCH_TIMES: NewsScraperSource,
+  FOX: NewsScraperSource,
+  WASH_EXAM: NewsScraperSource,
+};
 
 export declare type NewsScraperHeadline = {
   title: string;
@@ -20,8 +26,8 @@ export declare type NewsScraperHeadline = {
 }
 
 export declare type NewsScraperResponse = {
-  source: NewsScraperSource;
   type: NewsScraperType,
+  source: NewsScraperSource;
   headlines: NewsScraperHeadline[];
 }
 
