@@ -5,6 +5,7 @@ import {
   NewsScraperResponse,
   APScraper,
   CNNScraper,
+  EpochTimesScraper,
   FoxScraper,
   WashExamScraper,
   newsScraperSources,
@@ -14,7 +15,7 @@ function createScrapers(sources: NewsScraperSources): any[] {
   return Object.values(sources).map(source => {
     if (source.name === newsScraperSources.AP.name) return new APScraper();
     else if (source.name === newsScraperSources.CNN.name) return new CNNScraper();
-    else if (source.name === newsScraperSources.EPOCH_TIMES.name) return undefined;
+    else if (source.name === newsScraperSources.EPOCH_TIMES.name) return new EpochTimesScraper();
     else if (source.name === newsScraperSources.FOX.name) return new FoxScraper();
     else if (source.name === newsScraperSources.WASH_EXAM.name) return new WashExamScraper();
     else throw new Error(`news scraper source: ${source} is invalid`);

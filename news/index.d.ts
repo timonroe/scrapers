@@ -41,6 +41,11 @@ export declare class CNNScraper implements NewsScraper {
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }
 
+export declare class EpochTimesScraper implements NewsScraper {
+  constructor();
+  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
+}
+
 export declare class FoxScraper implements NewsScraper {
   constructor();
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;

@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { NewsScraperType, APScraper, CNNScraper, FoxScraper, WashExamScraper, newsScraperSources, } from '../../index.js';
+import { NewsScraperType, APScraper, CNNScraper, EpochTimesScraper, FoxScraper, WashExamScraper, newsScraperSources, } from '../../index.js';
 function createScrapers(sources) {
     return Object.values(sources).map(source => {
         if (source.name === newsScraperSources.AP.name)
@@ -7,7 +7,7 @@ function createScrapers(sources) {
         else if (source.name === newsScraperSources.CNN.name)
             return new CNNScraper();
         else if (source.name === newsScraperSources.EPOCH_TIMES.name)
-            return undefined;
+            return new EpochTimesScraper();
         else if (source.name === newsScraperSources.FOX.name)
             return new FoxScraper();
         else if (source.name === newsScraperSources.WASH_EXAM.name)

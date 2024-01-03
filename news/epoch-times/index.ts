@@ -16,6 +16,7 @@ const {
   LOGGING_EPOCH_TIMES_SCRAPER,
 } = process.env;
 
+
 export class EpochTimesScraper implements NewsScraper {
   source: NewsScraperSource;
   logger: Logger;
@@ -35,16 +36,22 @@ export class EpochTimesScraper implements NewsScraper {
       const response = await fetch(this.source.urlPolitics);
       const htmlDocument = await response.text();
       const $ = cheerio.load(htmlDocument);
-      const headlineElements = $('.SectionPromo-title .Link');
+      const headlineElements = $('div.grid.grid-cols-4.gap-x-9.border-b');
       for (let x = 0; x < headlineElements.length; x++) {
         const headlineElement = $(headlineElements[x]);  // Convert the current element to a Cheerio object
-        let href = headlineElement.attr('href');
+        const divElement = headlineElement.children('div');
+        if (!divElement) continue;
+        const aElement = divElement.children('a[href]');
+        if (!aElement) continue;
+        let href = aElement.attr('href');
         if (!href) continue;
         href = href.trim();
         if (!href) continue;
         const url = href.includes('https') ? href : `${this.source.url}${href}`;
         if (headlines.find(headline => headline.url === url)) continue;  // Get rid of dups
-        let title = headlineElement.text();
+        const h3Element = headlineElement.find('h3');
+        if (!h3Element) continue;
+        let title = h3Element.text();
         if (!title) continue;
         title = title.trim();
         if (!title) continue;    
@@ -54,7 +61,7 @@ export class EpochTimesScraper implements NewsScraper {
         });
       }
     } catch (error: any) {
-      this.logger.error('WashExamScraper.scrape error: %s', error.message);
+      this.logger.error('EpochTimesScraper.scrape error: %s', error.message);
       throw error;
     }
     const response = {
@@ -62,7 +69,7 @@ export class EpochTimesScraper implements NewsScraper {
       source: this.source,
       headlines,
     };
-    this.logger.verbose('WashExamScraper.scrape: %s', JSON.stringify(response, null, 2));
+    this.logger.verbose('EpochTimesScraper.scrape: %s', JSON.stringify(response, null, 2));
     return response;
   }
 
