@@ -2,12 +2,15 @@ import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
 import {
-  NewsScraperSource,
   NewsScraperType,
+  NewsScraperSource,
   NewsScraperHeadline,
   NewsScraperResponse,
   NewsScraper,
-} from '../common/interfaces.js';
+} from '../common/types.js';
+import {
+  newsScraperSources,
+} from '../common/sources.js';
 
 const {
   LOGGING_WASH_EXAM_SCRAPER,
@@ -18,7 +21,7 @@ export class WashExamScraper implements NewsScraper {
   logger: Logger;
 
   constructor() {
-    this.source = NewsScraperSource.WASH_EXAM;
+    this.source = newsScraperSources.WASH_EXAM;
     if (LOGGING_WASH_EXAM_SCRAPER && LOGGING_WASH_EXAM_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
@@ -29,7 +32,7 @@ export class WashExamScraper implements NewsScraper {
   async scrapePolitics(): Promise<NewsScraperResponse> {
     let headlines: NewsScraperHeadline[] = [];
     try {
-      const response = await fetch('https://www.washingtonexaminer.com/politics');
+      const response = await fetch(this.source.urlPolitics);
       const htmlDocument = await response.text();
       const $ = cheerio.load(htmlDocument);
       const headlineElements = $('.SectionPromo-title .Link');
@@ -39,7 +42,7 @@ export class WashExamScraper implements NewsScraper {
         if (!href) continue;
         href = href.trim();
         if (!href) continue;
-        const url = href.includes('https') ? href : `https://www.washingtonexaminer.com${href}`;
+        const url = href.includes('https') ? href : `${this.source.url}${href}`;
         if (headlines.find(headline => headline.url === url)) continue;  // Get rid of dups
         let title = headlineElement.text();
         if (!title) continue;
@@ -55,8 +58,8 @@ export class WashExamScraper implements NewsScraper {
       throw error;
     }
     const response = {
-      source: this.source,
       type: NewsScraperType.POLITICS,
+      source: this.source,
       headlines,
     };
     this.logger.verbose('WashExamScraper.scrape: %s', JSON.stringify(response, null, 2));
