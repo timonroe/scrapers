@@ -24,7 +24,7 @@ function createScrapers(sources: NewsScraperSources): any[] {
 
 (async () => {
   const sources: NewsScraperSources = newsScraperSources;
-  const scrapers = createScrapers(newsScraperSources);
+  const scrapers = createScrapers(sources);
   const results = await Promise.allSettled(
     scrapers.map(async (scraper) => {
       return scraper.scrape(NewsScraperType.POLITICS);
