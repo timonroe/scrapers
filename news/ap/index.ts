@@ -8,20 +8,30 @@ import {
   NewsScraperResponse,
   NewsScraper,
 } from '../common/types.js';
-import {
-  newsScraperSources,
-} from '../common/sources.js';
 
 const {
   LOGGING_AP_SCRAPER,
 } = process.env;
 
+const NAME = 'Associated Press';
+const SHORT_NAME = 'AP';
+const URL = 'https://apnews.com';
+const URL_POLITICS = 'https://apnews.com/politics';
+
 export class APScraper implements NewsScraper {
   source: NewsScraperSource;
+  name: string;
+  shortName: string;
+  url: string;
+  urlPolitics: string;
   logger: Logger;
 
   constructor() {
-    this.source = newsScraperSources.AP;
+    this.source = NewsScraperSource.AP;
+    this.name = NAME;
+    this.shortName = SHORT_NAME;
+    this.url = URL;
+    this.urlPolitics = URL_POLITICS;
     if (LOGGING_AP_SCRAPER && LOGGING_AP_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
@@ -32,7 +42,7 @@ export class APScraper implements NewsScraper {
   async scrapePolitics(): Promise<NewsScraperResponse> {
     let headlines: NewsScraperHeadline[] = [];
     try {
-      const response = await fetch(this.source.urlPolitics);
+      const response = await fetch(this.urlPolitics);
       const htmlDocument = await response.text();
       const $ = cheerio.load(htmlDocument, null, false);
       const headlineElements = $('.PagePromo-title .Link');
@@ -42,7 +52,7 @@ export class APScraper implements NewsScraper {
         if (!href) continue;
         href = href.trim();
         if (!href) continue;
-        const url = href.includes('https') ? href : `${this.source.url}${href}`;
+        const url = href.includes('https') ? href : `${this.url}${href}`;
         if (headlines.find(headline => headline.url === href)) continue;  // Get rid of dups
         const titleElement = headlineElement.find('.PagePromoContentIcons-text');
         if (!titleElement) continue;
@@ -62,6 +72,10 @@ export class APScraper implements NewsScraper {
     const response = {
       type: NewsScraperType.POLITICS,
       source: this.source,
+      name: this.name,
+      shortName: this.shortName,
+      url: this.url,
+      urlPolitics: this.urlPolitics,
       headlines,
     };
     this.logger.verbose('APScraper.scrape: %s', JSON.stringify(response, null, 2));

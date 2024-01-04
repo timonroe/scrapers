@@ -1,24 +1,15 @@
-import { NewsScraper } from './common/types.js';
-
 export declare enum NewsScraperType {
   POLITICS = 'politics',
   SPORTS = 'sports',
 }
 
-export declare type NewsScraperSource = {
-  name: string,
-  shortName: string,
-  url: string,
-  urlPolitics: string,
-};
-
-export declare type NewsScraperSources = {
-  AP: NewsScraperSource,
-  CNN: NewsScraperSource,
-  EPOCH_TIMES: NewsScraperSource,
-  FOX: NewsScraperSource,
-  WASH_EXAM: NewsScraperSource,
-};
+export enum NewsScraperSource {
+  AP = 'ap',
+  CNN = 'cnn',
+  EPOCH_TIMES = 'epochtimes',
+  FOX = 'fox',
+  WASH_EXAM = 'washexam',
+}
 
 export declare type NewsScraperHeadline = {
   title: string;
@@ -31,27 +22,6 @@ export declare type NewsScraperResponse = {
   headlines: NewsScraperHeadline[];
 }
 
-export declare class APScraper implements NewsScraper {
-  constructor();
-  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
-}
-
-export declare class CNNScraper implements NewsScraper {
-  constructor();
-  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
-}
-
-export declare class EpochTimesScraper implements NewsScraper {
-  constructor();
-  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
-}
-
-export declare class FoxScraper implements NewsScraper {
-  constructor();
-  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
-}
-
-export declare class WashExamScraper implements NewsScraper {
-  constructor();
+export interface NewsScraper {
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }

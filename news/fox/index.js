@@ -1,14 +1,25 @@
 import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
-import { NewsScraperType, } from '../common/types.js';
-import { newsScraperSources, } from '../common/sources.js';
+import { NewsScraperType, NewsScraperSource, } from '../common/types.js';
 const { LOGGING_FOX_SCRAPER, } = process.env;
+const NAME = 'Fox News';
+const SHORT_NAME = 'Fox';
+const URL = 'https://www.foxnews.com';
+const URL_POLITICS = 'https://www.foxnews.com/politics';
 export class FoxScraper {
     source;
+    name;
+    shortName;
+    url;
+    urlPolitics;
     logger;
     constructor() {
-        this.source = newsScraperSources.FOX;
+        this.source = NewsScraperSource.FOX;
+        this.name = NAME;
+        this.shortName = SHORT_NAME;
+        this.url = URL;
+        this.urlPolitics = URL_POLITICS;
         if (LOGGING_FOX_SCRAPER && LOGGING_FOX_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
@@ -19,7 +30,7 @@ export class FoxScraper {
     async scrapePolitics() {
         let headlines = [];
         try {
-            const response = await fetch(this.source.urlPolitics);
+            const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();
             const $ = cheerio.load(htmlDocument);
             const headlineElements = $('.article-list .article .info .title a');
@@ -31,7 +42,7 @@ export class FoxScraper {
                 href = href.trim();
                 if (!href)
                     continue;
-                const url = href.includes('https') ? href : `${this.source.url}${href}`;
+                const url = href.includes('https') ? href : `${this.url}${href}`;
                 if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dups
                 let title = headlineElement.text();
@@ -53,6 +64,10 @@ export class FoxScraper {
         const response = {
             type: NewsScraperType.POLITICS,
             source: this.source,
+            name: this.name,
+            shortName: this.shortName,
+            url: this.url,
+            urlPolitics: this.urlPolitics,
             headlines,
         };
         this.logger.verbose('FoxScraper.scrape: %s', JSON.stringify(response, null, 2));

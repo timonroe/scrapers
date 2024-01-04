@@ -1,14 +1,25 @@
 import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
-import { NewsScraperType, } from '../common/types.js';
-import { newsScraperSources, } from '../common/sources.js';
+import { NewsScraperType, NewsScraperSource, } from '../common/types.js';
 const { LOGGING_CNN_SCRAPER, } = process.env;
+const NAME = 'Cable News Network';
+const SHORT_NAME = 'CNN';
+const URL = 'https://www.cnn.com';
+const URL_POLITICS = 'https://www.cnn.com/politics';
 export class CNNScraper {
     source;
+    name;
+    shortName;
+    url;
+    urlPolitics;
     logger;
     constructor() {
-        this.source = newsScraperSources.CNN;
+        this.source = NewsScraperSource.CNN;
+        this.name = NAME;
+        this.shortName = SHORT_NAME;
+        this.url = URL;
+        this.urlPolitics = URL_POLITICS;
         if (LOGGING_CNN_SCRAPER && LOGGING_CNN_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
@@ -19,7 +30,7 @@ export class CNNScraper {
     async scrapePolitics() {
         let headlines = [];
         try {
-            const response = await fetch(this.source.urlPolitics);
+            const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();
             const $ = cheerio.load(htmlDocument);
             const headlineElements = $('a.container_lead-plus-headlines__link');
@@ -31,7 +42,7 @@ export class CNNScraper {
                 href = href.trim();
                 if (!href)
                     continue;
-                const url = href.includes('https') ? href : `${this.source.url}${href}`;
+                const url = href.includes('https') ? href : `${this.url}${href}`;
                 if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dups
                 const titleElement = headlineElement.find('div > div > span');
@@ -56,6 +67,10 @@ export class CNNScraper {
         const response = {
             type: NewsScraperType.POLITICS,
             source: this.source,
+            name: this.name,
+            shortName: this.shortName,
+            url: this.url,
+            urlPolitics: this.urlPolitics,
             headlines,
         };
         this.logger.verbose('CNNScraper.scrape: %s', JSON.stringify(response, null, 2));

@@ -1,27 +1,13 @@
 import 'dotenv/config';
-import { NewsScraperType, APScraper, CNNScraper, EpochTimesScraper, FoxScraper, WashExamScraper, newsScraperSources, } from '../../index.js';
-function createScrapers(sources) {
-    return Object.values(sources).map(source => {
-        if (source.name === newsScraperSources.AP.name)
-            return new APScraper();
-        else if (source.name === newsScraperSources.CNN.name)
-            return new CNNScraper();
-        else if (source.name === newsScraperSources.EPOCH_TIMES.name)
-            return new EpochTimesScraper();
-        else if (source.name === newsScraperSources.FOX.name)
-            return new FoxScraper();
-        else if (source.name === newsScraperSources.WASH_EXAM.name)
-            return new WashExamScraper();
-        else
-            throw new Error(`news scraper source: ${source} is invalid`);
-    }).filter(Boolean);
-}
+import { NewsScraperType } from '../../common/types.js';
+import { NewsScraperFactor } from '../../factory/index.js';
 (async () => {
-    const sources = newsScraperSources;
-    const scrapers = createScrapers(sources);
+    const factory = new NewsScraperFactor();
+    const scrapers = await factory.createScrapers();
     const results = await Promise.allSettled(scrapers.map(async (scraper) => {
         return scraper.scrape(NewsScraperType.POLITICS);
     }));
+    // @ts-ignore
     const scraperResponses = results.map(result => {
         if (result.status === 'fulfilled') {
             return result.value;

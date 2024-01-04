@@ -8,21 +8,30 @@ import {
   NewsScraperResponse,
   NewsScraper,
 } from '../common/types.js';
-import {
-  newsScraperSources,
-} from '../common/sources.js';
 
 const {
   LOGGING_EPOCH_TIMES_SCRAPER,
 } = process.env;
 
+const NAME = 'The Epoch Times';
+const SHORT_NAME = 'Epoch Times';
+const URL = 'https://www.theepochtimes.com';
+const URL_POLITICS = 'https://www.theepochtimes.com/us/us-politics';
 
 export class EpochTimesScraper implements NewsScraper {
   source: NewsScraperSource;
+  name: string;
+  shortName: string;
+  url: string;
+  urlPolitics: string;
   logger: Logger;
 
   constructor() {
-    this.source = newsScraperSources.EPOCH_TIMES;
+    this.source = NewsScraperSource.EPOCH_TIMES;
+    this.name = NAME;
+    this.shortName = SHORT_NAME;
+    this.url = URL;
+    this.urlPolitics = URL_POLITICS;
     if (LOGGING_EPOCH_TIMES_SCRAPER && LOGGING_EPOCH_TIMES_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
@@ -33,7 +42,7 @@ export class EpochTimesScraper implements NewsScraper {
   async scrapePolitics(): Promise<NewsScraperResponse> {
     let headlines: NewsScraperHeadline[] = [];
     try {
-      const response = await fetch(this.source.urlPolitics);
+      const response = await fetch(this.urlPolitics);
       const htmlDocument = await response.text();
       const $ = cheerio.load(htmlDocument);
       const headlineElements = $('div.grid.grid-cols-4.gap-x-9.border-b');
@@ -47,7 +56,7 @@ export class EpochTimesScraper implements NewsScraper {
         if (!href) continue;
         href = href.trim();
         if (!href) continue;
-        const url = href.includes('https') ? href : `${this.source.url}${href}`;
+        const url = href.includes('https') ? href : `${this.url}${href}`;
         if (headlines.find(headline => headline.url === url)) continue;  // Get rid of dups
         const h3Element = headlineElement.find('h3');
         if (!h3Element) continue;
@@ -67,6 +76,10 @@ export class EpochTimesScraper implements NewsScraper {
     const response = {
       type: NewsScraperType.POLITICS,
       source: this.source,
+      name: this.name,
+      shortName: this.shortName,
+      url: this.url,
+      urlPolitics: this.urlPolitics,
       headlines,
     };
     this.logger.verbose('EpochTimesScraper.scrape: %s', JSON.stringify(response, null, 2));
