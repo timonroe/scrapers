@@ -3,7 +3,7 @@ export declare enum NewsScraperType {
   SPORTS = 'sports',
 }
 
-export enum NewsScraperSource {
+export declare enum NewsScraperSource {
   AP = 'ap',
   CNN = 'cnn',
   EPOCH_TIMES = 'epochtimes',
@@ -22,7 +22,7 @@ export declare type NewsScraperResponse = {
   headlines: NewsScraperHeadline[];
 }
 
-export interface NewsScraper {
+export declare interface NewsScraper {
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }
 
