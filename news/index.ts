@@ -1,3 +1,4 @@
+export { NewsScraperType, NewsScraperSource } from './common/types.js';
 export { APScraper } from './ap/index.js';
 export { CNNScraper } from './cnn/index.js';
 export { EpochTimesScraper } from './epoch-times/index.js';
