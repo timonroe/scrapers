@@ -8,6 +8,7 @@ export enum NewsScraperSource {
   CNN = 'cnn',
   EPOCH_TIMES = 'epochtimes',
   FOX = 'fox',
+  NEWSWEEK = 'newsweek',
   WASH_EXAM = 'washexam',
 };
 

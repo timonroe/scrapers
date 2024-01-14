@@ -10,37 +10,19 @@ Scraping news organizations' websites for headlines
 ```javascript
 import {
   NewsScraperType,
-  NewsScraperSource,
   NewsScraperResponse,
-  APScraper,
-  CNNScraper,
-  FoxScraper,
-  WashExamScraper,
+  NewsScraperFactor
 } from '@soralinks/news-scrapers';
 
-function createScrapers(sources: NewsScraperSource[]): any[] {
-  return sources.map(source => {
-    if (source === NewsScraperSource.AP) return new APScraper();
-    else if (source === NewsScraperSource.CNN) return new CNNScraper();
-    else if (source === NewsScraperSource.FOX) return new FoxScraper();
-    else if (source === NewsScraperSource.WASH_EXAM) return new WashExamScraper();
-    else throw new Error(`news scraper source: ${source} is invalid`);
-  });
-}
-
-const sources: NewsScraperSource[] = [
-    NewsScraperSource.AP,
-    NewsScraperSource.CNN,
-    NewsScraperSource.FOX,
-    NewsScraperSource.WASH_EXAM
-  ];
-  const scrapers = createScrapers(sources);
+(async () => {
+  const factory = new NewsScraperFactor();
+  const scrapers = await factory.createScrapers();
   const results = await Promise.allSettled(
     scrapers.map(async (scraper) => {
       return scraper.scrape(NewsScraperType.POLITICS);
     }),
   );
-
+  // @ts-ignore
   const scraperResponses: NewsScraperResponse[] = results.map(result => {
     if (result.status === 'fulfilled') {
       return result.value;
@@ -49,6 +31,7 @@ const sources: NewsScraperSource[] = [
   }).filter(Boolean);
   console.log(`scraperResponses: ${JSON.stringify(scraperResponses, null, 2)}`);
 
+})();
 ```
 
 ## Logging
@@ -56,8 +39,9 @@ const sources: NewsScraperSource[] = [
 // To turn on logging, set the following environment variables:
 //   LOGGING_AP_SCRAPER = 'on'
 //   LOGGING_CNN_SCRAPER = 'on'
+//   LOGGING_EPOCH_TIMES_SCRAPER='on'
 //   LOGGING_FOX_SCRAPER = 'on'
+//   LOGGING_NEWSWEEK_SCRAPER = 'on'
 //   LOGGING_WASH_EXAM_SCRAPER = 'on'
 // Note that error logging is always on
-
 ```
