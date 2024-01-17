@@ -28,7 +28,7 @@ export class APScraper {
         }
     }
     async scrapePolitics() {
-        let headlines = [];
+        const headlines = [];
         try {
             const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();
@@ -43,7 +43,7 @@ export class APScraper {
                 if (!href)
                     continue;
                 const url = href.includes('https') ? href : `${this.url}${href}`;
-                if (headlines.find(headline => headline.url === href))
+                if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dups
                 const titleElement = headlineElement.find('.PagePromoContentIcons-text');
                 if (!titleElement)

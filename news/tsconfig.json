@@ -109,6 +109,7 @@
   "files": [
     "./common/types.ts",
     "./ap/index.ts",
+    "./bbc/index.ts",
     "./cnn/index.ts",
     "./epoch-times/index.ts",
     "./fox/index.ts",

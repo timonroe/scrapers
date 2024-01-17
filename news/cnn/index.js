@@ -28,7 +28,7 @@ export class CNNScraper {
         }
     }
     async scrapePolitics() {
-        let headlines = [];
+        const headlines = [];
         try {
             const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();

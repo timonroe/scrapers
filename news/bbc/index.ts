@@ -10,17 +10,15 @@ import {
 } from '../common/types.js';
 
 const {
-  LOGGING_WASH_EXAM_SCRAPER,
+  LOGGING_BBC_SCRAPER,
 } = process.env;
 
-const NAME = 'Washington Examiner';
-const SHORT_NAME = 'Wash Exam';
-const URL = 'https://www.washingtonexaminer.com';
-const URL_POLITICS = 'https://www.washingtonexaminer.com/politics';
+const NAME = 'British Broadcasting Corporation';
+const SHORT_NAME = 'BBC';
+const URL = 'https://www.bbc.com';
+const URL_POLITICS = 'https://www.bbc.com/news/us-canada';
 
-// TODO: this source stopped working, need to figure out why
-
-export class WashExamScraper implements NewsScraper {
+export class BBCScraper implements NewsScraper {
   source: NewsScraperSource;
   name: string;
   shortName: string;
@@ -29,15 +27,12 @@ export class WashExamScraper implements NewsScraper {
   logger: Logger;
 
   constructor() {
-    // To get rid of the compiler error
-    // this.source = NewsScraperSource.WASH_EXAM;
-    // @ts-ignore
-    this.source = 'washexam';
+    this.source = NewsScraperSource.BBC;
     this.name = NAME;
     this.shortName = SHORT_NAME;
     this.url = URL;
     this.urlPolitics = URL_POLITICS;
-    if (LOGGING_WASH_EXAM_SCRAPER && LOGGING_WASH_EXAM_SCRAPER === 'on') {
+    if (LOGGING_BBC_SCRAPER && LOGGING_BBC_SCRAPER === 'on') {
       this.logger = new Logger({ logVerbose: true, logError: true });
     } else {
       this.logger = new Logger({ logError: true });
@@ -49,8 +44,8 @@ export class WashExamScraper implements NewsScraper {
     try {
       const response = await fetch(this.urlPolitics);
       const htmlDocument = await response.text();
-      const $ = cheerio.load(htmlDocument);
-      const headlineElements = $('.SectionPromo-title .Link');
+      const $ = cheerio.load(htmlDocument, null, false);
+      const headlineElements = $('a[data-testid="internal-link"]');
       for (let x = 0; x < headlineElements.length; x++) {
         const headlineElement = $(headlineElements[x]);  // Convert the current element to a Cheerio object
         let href = headlineElement.attr('href');
@@ -59,17 +54,19 @@ export class WashExamScraper implements NewsScraper {
         if (!href) continue;
         const url = href.includes('https') ? href : `${this.url}${href}`;
         if (headlines.find(headline => headline.url === url)) continue;  // Get rid of dups
-        let title = headlineElement.text();
+        const titleElement = headlineElement.find('h2');
+        if (!titleElement) continue;
+        let title = titleElement.text();
         if (!title) continue;
         title = title.trim();
-        if (!title) continue;    
+        if (!title) continue;
         headlines.push({
           title,
           url,
         });
       }
     } catch (error: any) {
-      this.logger.error('WashExamScraper.scrape error: %s', error.message);
+      this.logger.error('BBCScraper.scrape error: %s', error.message);
       throw error;
     }
     const response = {
@@ -81,7 +78,7 @@ export class WashExamScraper implements NewsScraper {
       urlPolitics: this.urlPolitics,
       headlines,
     };
-    this.logger.verbose('WashExamScraper.scrape: %s', JSON.stringify(response, null, 2));
+    this.logger.verbose('BBCScraper.scrape: %s', JSON.stringify(response, null, 2));
     return response;
   }
 

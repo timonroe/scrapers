@@ -1,12 +1,13 @@
 import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
-import { NewsScraperType, NewsScraperSource, } from '../common/types.js';
+import { NewsScraperType, } from '../common/types.js';
 const { LOGGING_WASH_EXAM_SCRAPER, } = process.env;
 const NAME = 'Washington Examiner';
 const SHORT_NAME = 'Wash Exam';
 const URL = 'https://www.washingtonexaminer.com';
 const URL_POLITICS = 'https://www.washingtonexaminer.com/politics';
+// TODO: this source stopped working, need to figure out why
 export class WashExamScraper {
     source;
     name;
@@ -15,7 +16,10 @@ export class WashExamScraper {
     urlPolitics;
     logger;
     constructor() {
-        this.source = NewsScraperSource.WASH_EXAM;
+        // To get rid of the compiler error
+        // this.source = NewsScraperSource.WASH_EXAM;
+        // @ts-ignore
+        this.source = 'washexam';
         this.name = NAME;
         this.shortName = SHORT_NAME;
         this.url = URL;
@@ -28,7 +32,7 @@ export class WashExamScraper {
         }
     }
     async scrapePolitics() {
-        let headlines = [];
+        const headlines = [];
         try {
             const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();

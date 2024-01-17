@@ -28,7 +28,7 @@ export class NewsweekScraper {
         }
     }
     async scrapePolitics() {
-        let headlines = [];
+        const headlines = [];
         try {
             const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();
@@ -46,7 +46,7 @@ export class NewsweekScraper {
                 if (!href)
                     continue;
                 const url = href.includes('https') ? href : `${this.url}${href}`;
-                if (headlines.find(headline => headline.url === href))
+                if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dups
                 let title = aElement.text();
                 if (!title)

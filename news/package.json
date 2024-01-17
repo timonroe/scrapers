@@ -1,6 +1,6 @@
 {
   "name": "@soralinks/news-scrapers",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "Scraping news organizations' websites for headlines",
   "author": "Tim Monroe <timonroe12@gmail.com>",
   "types": "./index.d.ts",

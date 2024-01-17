@@ -40,7 +40,7 @@ export class NewsweekScraper implements NewsScraper {
   }
 
   async scrapePolitics(): Promise<NewsScraperResponse> {
-    let headlines: NewsScraperHeadline[] = [];
+    const headlines: NewsScraperHeadline[] = [];
     try {
       const response = await fetch(this.urlPolitics);
       const htmlDocument = await response.text();
@@ -55,7 +55,7 @@ export class NewsweekScraper implements NewsScraper {
         href = href.trim();
         if (!href) continue;
         const url = href.includes('https') ? href : `${this.url}${href}`;
-        if (headlines.find(headline => headline.url === href)) continue;  // Get rid of dups
+        if (headlines.find(headline => headline.url === url)) continue;  // Get rid of dups
         let title = aElement.text();
         if (!title) continue;
         title = title.trim();

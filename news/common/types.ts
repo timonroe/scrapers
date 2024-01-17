@@ -5,11 +5,12 @@ export enum NewsScraperType {
 
 export enum NewsScraperSource {
   AP = 'ap',
+  BBC = 'bbc',
   CNN = 'cnn',
   EPOCH_TIMES = 'epochtimes',
   FOX = 'fox',
   NEWSWEEK = 'newsweek',
-  WASH_EXAM = 'washexam',
+  // WASH_EXAM = 'washexam',
 };
 
 export type NewsScraperHeadline = {

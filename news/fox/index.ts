@@ -40,7 +40,7 @@ export class FoxScraper implements NewsScraper {
   }
 
   async scrapePolitics(): Promise<NewsScraperResponse> {
-    let headlines: NewsScraperHeadline[] = [];
+    const headlines: NewsScraperHeadline[] = [];
     try {
       const response = await fetch(this.urlPolitics);
       const htmlDocument = await response.text();

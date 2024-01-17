@@ -38,6 +38,7 @@ import {
 ```javascript
 // To turn on logging, set the following environment variables:
 //   LOGGING_AP_SCRAPER = 'on'
+//   LOGGING_BBC_SCRAPER = 'on'
 //   LOGGING_CNN_SCRAPER = 'on'
 //   LOGGING_EPOCH_TIMES_SCRAPER='on'
 //   LOGGING_FOX_SCRAPER = 'on'

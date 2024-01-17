@@ -2,12 +2,12 @@ import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
 import { NewsScraperType, NewsScraperSource, } from '../common/types.js';
-const { LOGGING_FOX_SCRAPER, } = process.env;
-const NAME = 'Fox News';
-const SHORT_NAME = 'Fox';
-const URL = 'https://www.foxnews.com';
-const URL_POLITICS = 'https://www.foxnews.com/politics';
-export class FoxScraper {
+const { LOGGING_BBC_SCRAPER, } = process.env;
+const NAME = 'British Broadcasting Corporation';
+const SHORT_NAME = 'BBC';
+const URL = 'https://www.bbc.com';
+const URL_POLITICS = 'https://www.bbc.com/news/us-canada';
+export class BBCScraper {
     source;
     name;
     shortName;
@@ -15,12 +15,12 @@ export class FoxScraper {
     urlPolitics;
     logger;
     constructor() {
-        this.source = NewsScraperSource.FOX;
+        this.source = NewsScraperSource.BBC;
         this.name = NAME;
         this.shortName = SHORT_NAME;
         this.url = URL;
         this.urlPolitics = URL_POLITICS;
-        if (LOGGING_FOX_SCRAPER && LOGGING_FOX_SCRAPER === 'on') {
+        if (LOGGING_BBC_SCRAPER && LOGGING_BBC_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
         else {
@@ -32,8 +32,8 @@ export class FoxScraper {
         try {
             const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();
-            const $ = cheerio.load(htmlDocument);
-            const headlineElements = $('.article-list .article .info .title a');
+            const $ = cheerio.load(htmlDocument, null, false);
+            const headlineElements = $('a[data-testid="internal-link"]');
             for (let x = 0; x < headlineElements.length; x++) {
                 const headlineElement = $(headlineElements[x]); // Convert the current element to a Cheerio object
                 let href = headlineElement.attr('href');
@@ -45,7 +45,10 @@ export class FoxScraper {
                 const url = href.includes('https') ? href : `${this.url}${href}`;
                 if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dups
-                let title = headlineElement.text();
+                const titleElement = headlineElement.find('h2');
+                if (!titleElement)
+                    continue;
+                let title = titleElement.text();
                 if (!title)
                     continue;
                 title = title.trim();
@@ -58,7 +61,7 @@ export class FoxScraper {
             }
         }
         catch (error) {
-            this.logger.error('FoxScraper.scrape error: %s', error.message);
+            this.logger.error('BBCScraper.scrape error: %s', error.message);
             throw error;
         }
         const response = {
@@ -70,7 +73,7 @@ export class FoxScraper {
             urlPolitics: this.urlPolitics,
             headlines,
         };
-        this.logger.verbose('FoxScraper.scrape: %s', JSON.stringify(response, null, 2));
+        this.logger.verbose('BBCScraper.scrape: %s', JSON.stringify(response, null, 2));
         return response;
     }
     async scrape(type = NewsScraperType.POLITICS) {
