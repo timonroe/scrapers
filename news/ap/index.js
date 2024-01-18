@@ -33,7 +33,7 @@ export class APScraper {
             const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();
             const $ = cheerio.load(htmlDocument, null, false);
-            const headlineElements = $('.PagePromo-title .Link');
+            const headlineElements = $('a.Link');
             for (let x = 0; x < headlineElements.length; x++) {
                 const headlineElement = $(headlineElements[x]); // Convert the current element to a Cheerio object
                 let href = headlineElement.attr('href');
@@ -45,7 +45,7 @@ export class APScraper {
                 const url = href.includes('https') ? href : `${this.url}${href}`;
                 if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dups
-                const titleElement = headlineElement.find('.PagePromoContentIcons-text');
+                const titleElement = headlineElement.find('span.PagePromoContentIcons-text');
                 if (!titleElement)
                     continue;
                 let title = titleElement.text();
@@ -59,6 +59,28 @@ export class APScraper {
                     url,
                 });
             }
+            /*
+            const headlineElements = $('.PagePromo-title .Link');
+            for (let x = 0; x < headlineElements.length; x++) {
+              const headlineElement = $(headlineElements[x]);  // Convert the current element to a Cheerio object
+              let href = headlineElement.attr('href');
+              if (!href) continue;
+              href = href.trim();
+              if (!href) continue;
+              const url = href.includes('https') ? href : `${this.url}${href}`;
+              if (headlines.find(headline => headline.url === url)) continue;  // Get rid of dups
+              const titleElement = headlineElement.find('.PagePromoContentIcons-text');
+              if (!titleElement) continue;
+              let title = titleElement.text();
+              if (!title) continue;
+              title = title.trim();
+              if (!title) continue;
+              headlines.push({
+                title,
+                url,
+              });
+            }
+            */
         }
         catch (error) {
             this.logger.error('APScraper.scrape error: %s', error.message);

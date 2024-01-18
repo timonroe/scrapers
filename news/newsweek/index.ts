@@ -45,7 +45,7 @@ export class NewsweekScraper implements NewsScraper {
       const response = await fetch(this.urlPolitics);
       const htmlDocument = await response.text();
       const $ = cheerio.load(htmlDocument, null, false);
-      const headlineElements = $('.l3 .h3');
+      const headlineElements = $('h2.h3');
       for (let x = 0; x < headlineElements.length; x++) {
         const headlineElement = $(headlineElements[x]);  // Convert the current element to a Cheerio object
         const aElement = headlineElement.find('a');
