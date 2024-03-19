@@ -1,12 +1,17 @@
 import 'dotenv/config';
 import {
   NewsScraperType,
+  // NewsScraperSource,
   NewsScraperResponse
 } from '../../common/types.js';
 import { NewsScraperFactor } from '../../factory/index.js';
 
 (async () => {
   const factory = new NewsScraperFactor();
+  /*
+  const sources: NewsScraperSource[] = [NewsScraperSource.AP];
+  const scrapers = await factory.createScrapers(sources);
+  */
   const scrapers = await factory.createScrapers();
   const results = await Promise.allSettled(
     scrapers.map(async (scraper) => {
