@@ -42,6 +42,7 @@ import {
 //   LOGGING_CNN_SCRAPER = 'on'
 //   LOGGING_EPOCH_TIMES_SCRAPER='on'
 //   LOGGING_FOX_SCRAPER = 'on'
+//   LOGGING_NEWSNATION_SCRAPER = 'on'
 //   LOGGING_NEWSWEEK_SCRAPER = 'on'
 //   LOGGING_WASH_EXAM_SCRAPER = 'on'
 // Note that error logging is always on

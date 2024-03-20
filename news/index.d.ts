@@ -53,6 +53,11 @@ export declare class FoxScraper implements NewsScraper {
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }
 
+export declare class NewsnationScraper implements NewsScraper {
+  constructor();
+  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
+}
+
 export declare class NewsweekScraper implements NewsScraper {
   constructor();
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;

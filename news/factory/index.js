@@ -5,6 +5,7 @@ import { CNNScraper } from '../cnn/index.js';
 import { EpochTimesScraper } from '../epoch-times/index.js';
 import { FoxScraper } from '../fox/index.js';
 import { NewsweekScraper } from '../newsweek/index.js';
+import { NewsnationScraper } from '../newsnation/index.js';
 // import { WashExamScraper } from '../wash-exam/index.js';
 export class NewsScraperFactory {
     constructor() {
@@ -25,6 +26,8 @@ export class NewsScraperFactory {
                 return new EpochTimesScraper();
             else if (source === NewsScraperSource.FOX)
                 return new FoxScraper();
+            else if (source === NewsScraperSource.NEWSNATION)
+                return new NewsnationScraper();
             else if (source === NewsScraperSource.NEWSWEEK)
                 return new NewsweekScraper();
             // else if (source === NewsScraperSource.WASH_EXAM) return new WashExamScraper();

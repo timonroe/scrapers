@@ -113,6 +113,7 @@
     "./cnn/index.ts",
     "./epoch-times/index.ts",
     "./fox/index.ts",
+    "./newsnation/index.ts",
     "./newsweek/index.ts",
     "./wash-exam/index.ts",
     "./index.ts",
