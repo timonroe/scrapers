@@ -11,11 +11,11 @@ Scraping news organizations' websites for headlines
 import {
   NewsScraperType,
   NewsScraperResponse,
-  NewsScraperFactor
+  NewsScraperFactory
 } from '@soralinks/news-scrapers';
 
 (async () => {
-  const factory = new NewsScraperFactor();
+  const factory = new NewsScraperFactory();
   const scrapers = await factory.createScrapers();
   const results = await Promise.allSettled(
     scrapers.map(async (scraper) => {

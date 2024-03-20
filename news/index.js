@@ -6,4 +6,4 @@ export { EpochTimesScraper } from './epoch-times/index.js';
 export { FoxScraper } from './fox/index.js';
 export { NewsweekScraper } from './newsweek/index.js';
 export { WashExamScraper } from './wash-exam/index.js';
-export { NewsScraperFactor } from './factory/index.js';
+export { NewsScraperFactory } from './factory/index.js';

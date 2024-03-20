@@ -10,7 +10,7 @@ import { FoxScraper } from '../fox/index.js';
 import { NewsweekScraper } from '../newsweek/index.js';
 // import { WashExamScraper } from '../wash-exam/index.js';
 
-export class NewsScraperFactor {
+export class NewsScraperFactory {
   constructor() {
   }
   async createScrapers(sources: NewsScraperSource[] = []): Promise<NewsScraper[]> {

@@ -63,7 +63,7 @@ export declare class WashExamScraper implements NewsScraper {
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }
 
-export declare class NewsScraperFactor {
+export declare class NewsScraperFactory {
   constructor();
   createScrapers(sources: NewsScraperSource[]): Promise<NewsScraper[]>;
 }
