@@ -34,7 +34,6 @@ export class WsjScraper {
             const htmlDocument = await response.text();
             const $ = cheerio.load(htmlDocument, null, false);
             const headlineElements = $('h3.css-fsvegl');
-            console.log(`headline count: ${headlineElements.length}`);
             for (let x = 0; x < headlineElements.length; x++) {
                 const headlineElement = $(headlineElements[x]); // Convert the current element to a Cheerio object
                 const anchorElement = headlineElement.find('a');
