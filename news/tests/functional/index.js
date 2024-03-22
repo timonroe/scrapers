@@ -1,11 +1,11 @@
 import 'dotenv/config';
-import { NewsScraperType, NewsScraperSource } from '../../common/types.js';
+import { NewsScraperType } from '../../common/types.js';
 import { NewsScraperFactory } from '../../factory/index.js';
 (async () => {
     const factory = new NewsScraperFactory();
-    const sources = [NewsScraperSource.NY_POST];
-    const scrapers = await factory.createScrapers(sources);
-    // const scrapers = await factory.createScrapers();
+    // const sources: NewsScraperSource[] = [NewsScraperSource.WSJ];
+    // const scrapers = await factory.createScrapers(sources);
+    const scrapers = await factory.createScrapers();
     const results = await Promise.allSettled(scrapers.map(async (scraper) => {
         return scraper.scrape(NewsScraperType.POLITICS);
     }));

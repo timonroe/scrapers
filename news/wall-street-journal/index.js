@@ -7,7 +7,7 @@ const NAME = 'The Wall Street Journal';
 const SHORT_NAME = 'WSJ';
 const URL = 'https://www.wsj.com';
 const URL_POLITICS = 'https://www.wsj.com/politics';
-export class WsjScraper {
+export class WSJScraper {
     source;
     name;
     shortName;
@@ -64,7 +64,7 @@ export class WsjScraper {
             }
         }
         catch (error) {
-            this.logger.error('WsjScraper.scrape error: %s', error.message);
+            this.logger.error('WSJScraper.scrape error: %s', error.message);
             throw error;
         }
         const response = {
@@ -76,7 +76,7 @@ export class WsjScraper {
             urlPolitics: this.urlPolitics,
             headlines,
         };
-        this.logger.verbose('WsjScraper.scrape: %s', JSON.stringify(response, null, 2));
+        this.logger.verbose('WSJScraper.scrape: %s', JSON.stringify(response, null, 2));
         return response;
     }
     async scrape(type = NewsScraperType.POLITICS) {

@@ -9,7 +9,7 @@ import { NewsweekScraper } from '../newsweek/index.js';
 import { NewsnationScraper } from '../newsnation/index.js';
 import { NYPostScraper } from '../ny-post/index.js';
 // import { WashExamScraper } from '../wash-exam/index.js';
-import { WsjScraper } from '../wall-street-journal/index.js';
+import { WSJScraper } from '../wall-street-journal/index.js';
 export class NewsScraperFactory {
     constructor() {
     }
@@ -39,7 +39,7 @@ export class NewsScraperFactory {
                 return new NYPostScraper();
             // else if (source === NewsScraperSource.WASH_EXAM) return new WashExamScraper();
             else if (source === NewsScraperSource.WSJ)
-                return new WsjScraper();
+                return new WSJScraper();
             else
                 throw new Error(`news scraper source: ${source} is invalid`);
         });

@@ -82,7 +82,7 @@ export declare class WashExamScraper implements NewsScraper {
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }
 
-export declare class WsjScraper implements NewsScraper {
+export declare class WSJScraper implements NewsScraper {
   constructor();
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }

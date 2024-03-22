@@ -18,7 +18,7 @@ const SHORT_NAME = 'WSJ';
 const URL = 'https://www.wsj.com';
 const URL_POLITICS = 'https://www.wsj.com/politics';
 
-export class WsjScraper implements NewsScraper {
+export class WSJScraper implements NewsScraper {
   source: NewsScraperSource;
   name: string;
   shortName: string;
@@ -68,7 +68,7 @@ export class WsjScraper implements NewsScraper {
         });
       }
     } catch (error: any) {
-      this.logger.error('WsjScraper.scrape error: %s', error.message);
+      this.logger.error('WSJScraper.scrape error: %s', error.message);
       throw error;
     }
     const response = {
@@ -80,7 +80,7 @@ export class WsjScraper implements NewsScraper {
       urlPolitics: this.urlPolitics,
       headlines,
     };
-    this.logger.verbose('WsjScraper.scrape: %s', JSON.stringify(response, null, 2));
+    this.logger.verbose('WSJScraper.scrape: %s', JSON.stringify(response, null, 2));
     return response;
   }
 
