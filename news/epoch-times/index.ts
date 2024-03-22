@@ -88,6 +88,6 @@ export class EpochTimesScraper implements NewsScraper {
 
   async scrape(type: NewsScraperType = NewsScraperType.POLITICS): Promise<NewsScraperResponse> {
     if (type === NewsScraperType.POLITICS) return this.scrapePolitics();
-    throw new Error(`scaping type: ${type} is not implemented`);
+    throw new Error(`scraping type: ${type} is not implemented`);
   }
 }

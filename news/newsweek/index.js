@@ -79,6 +79,6 @@ export class NewsweekScraper {
     async scrape(type = NewsScraperType.POLITICS) {
         if (type === NewsScraperType.POLITICS)
             return this.scrapePolitics();
-        throw new Error(`scaping type: ${type} is not implemented`);
+        throw new Error(`scraping type: ${type} is not implemented`);
     }
 }
