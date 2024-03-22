@@ -12,6 +12,7 @@ export declare enum NewsScraperSource {
   FOX = 'fox',
   NEWSNATION = 'newsnation',
   NEWSWEEK = 'newsweek',
+  NY_POST = 'nypost',
   // WASH_EXAM = 'washexam',
   WSJ = 'wsj',
 }
@@ -67,6 +68,11 @@ export declare class NewsnationScraper implements NewsScraper {
 }
 
 export declare class NewsweekScraper implements NewsScraper {
+  constructor();
+  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
+}
+
+export declare class NYPostScraper implements NewsScraper {
   constructor();
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }

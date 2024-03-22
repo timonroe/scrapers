@@ -12,6 +12,7 @@ export enum NewsScraperSource {
   FOX = 'fox',
   NEWSNATION = 'newsnation',
   NEWSWEEK = 'newsweek',
+  NY_POST = 'nypost',
   // WASH_EXAM = 'washexam',
   WSJ = 'wsj',
 };

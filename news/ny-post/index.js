@@ -2,12 +2,12 @@ import { Logger } from '@soralinks/logger';
 import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
 import { NewsScraperType, NewsScraperSource, } from '../common/types.js';
-const { LOGGING_CS_MONITOR_SCRAPER, } = process.env;
-const NAME = 'The Christian Science Monitor';
-const SHORT_NAME = 'CS Monitor';
-const URL = 'https://www.csmonitor.com';
-const URL_POLITICS = 'https://www.csmonitor.com/USA/Politics';
-export class CSMonitorScraper {
+const { LOGGING_NY_POST_SCRAPER, } = process.env;
+const NAME = 'New York Post';
+const SHORT_NAME = 'NY Post';
+const URL = 'https://nypost.com';
+const URL_POLITICS = 'https://nypost.com/politics';
+export class NYPostScraper {
     source;
     name;
     shortName;
@@ -15,12 +15,12 @@ export class CSMonitorScraper {
     urlPolitics;
     logger;
     constructor() {
-        this.source = NewsScraperSource.CS_MONITOR;
+        this.source = NewsScraperSource.NY_POST;
         this.name = NAME;
         this.shortName = SHORT_NAME;
         this.url = URL;
         this.urlPolitics = URL_POLITICS;
-        if (LOGGING_CS_MONITOR_SCRAPER && LOGGING_CS_MONITOR_SCRAPER === 'on') {
+        if (LOGGING_NY_POST_SCRAPER && LOGGING_NY_POST_SCRAPER === 'on') {
             this.logger = new Logger({ logVerbose: true, logError: true });
         }
         else {
@@ -33,10 +33,13 @@ export class CSMonitorScraper {
             const response = await fetch(this.urlPolitics);
             const htmlDocument = await response.text();
             const $ = cheerio.load(htmlDocument, null, false);
-            const headlineElements = $('a[title]');
+            const headlineElements = $('h2.story__headline, h3.story__headline');
             for (let x = 0; x < headlineElements.length; x++) {
                 const headlineElement = $(headlineElements[x]); // Convert the current element to a Cheerio object
-                let href = headlineElement.attr('href');
+                const anchorElement = headlineElement.find('a');
+                if (!anchorElement)
+                    continue;
+                let href = anchorElement.attr('href');
                 if (!href)
                     continue;
                 href = href.trim();
@@ -45,7 +48,7 @@ export class CSMonitorScraper {
                 const url = href.includes('https') ? href : `${this.url}${href}`;
                 if (headlines.find(headline => headline.url === url))
                     continue; // Get rid of dup
-                let title = headlineElement.attr('title');
+                let title = anchorElement.text();
                 if (!title)
                     continue;
                 title = title.trim();
@@ -58,7 +61,7 @@ export class CSMonitorScraper {
             }
         }
         catch (error) {
-            this.logger.error('CSMonitorScraper.scrape error: %s', error.message);
+            this.logger.error('NYPostScraper.scrape error: %s', error.message);
             throw error;
         }
         const response = {
@@ -70,7 +73,7 @@ export class CSMonitorScraper {
             urlPolitics: this.urlPolitics,
             headlines,
         };
-        this.logger.verbose('CSMonitorScraper.scrape: %s', JSON.stringify(response, null, 2));
+        this.logger.verbose('NYPostScraper.scrape: %s', JSON.stringify(response, null, 2));
         return response;
     }
     async scrape(type = NewsScraperType.POLITICS) {
