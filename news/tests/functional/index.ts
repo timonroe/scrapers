@@ -8,7 +8,7 @@ import { NewsScraperFactory } from '../../factory/index.js';
 
 (async () => {
   const factory = new NewsScraperFactory();
-  const sources: NewsScraperSource[] = [NewsScraperSource.WSJ];
+  const sources: NewsScraperSource[] = [NewsScraperSource.CS_MONITOR];
   const scrapers = await factory.createScrapers(sources);
   // const scrapers = await factory.createScrapers();
   const results = await Promise.allSettled(

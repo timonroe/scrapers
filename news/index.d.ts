@@ -7,10 +7,13 @@ export declare enum NewsScraperSource {
   AP = 'ap',
   BBC = 'bbc',
   CNN = 'cnn',
+  CS_MONITOR = 'csmonitor',
   EPOCH_TIMES = 'epochtimes',
   FOX = 'fox',
+  NEWSNATION = 'newsnation',
   NEWSWEEK = 'newsweek',
   // WASH_EXAM = 'washexam',
+  WSJ = 'wsj',
 }
 
 export declare type NewsScraperHeadline = {
@@ -39,6 +42,11 @@ export declare class BBCScraper implements NewsScraper {
 }
 
 export declare class CNNScraper implements NewsScraper {
+  constructor();
+  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
+}
+
+export declare class CSMonitorScraper implements NewsScraper {
   constructor();
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }

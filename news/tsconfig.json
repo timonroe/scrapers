@@ -110,6 +110,7 @@
     "./common/types.ts",
     "./ap/index.ts",
     "./bbc/index.ts",
+    "./chris-sci-monitor/index.ts",
     "./cnn/index.ts",
     "./epoch-times/index.ts",
     "./fox/index.ts",

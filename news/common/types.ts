@@ -7,6 +7,7 @@ export enum NewsScraperSource {
   AP = 'ap',
   BBC = 'bbc',
   CNN = 'cnn',
+  CS_MONITOR = 'csmonitor',
   EPOCH_TIMES = 'epochtimes',
   FOX = 'fox',
   NEWSNATION = 'newsnation',
