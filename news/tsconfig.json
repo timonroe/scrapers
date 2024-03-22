@@ -116,6 +116,7 @@
     "./newsnation/index.ts",
     "./newsweek/index.ts",
     "./wash-exam/index.ts",
+    "./wall-street-journal/index.ts",
     "./index.ts",
     "./tests/functional/index.ts"
   ],

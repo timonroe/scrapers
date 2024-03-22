@@ -14,6 +14,7 @@ export var NewsScraperSource;
     NewsScraperSource["NEWSNATION"] = "newsnation";
     NewsScraperSource["NEWSWEEK"] = "newsweek";
     // WASH_EXAM = 'washexam',
+    NewsScraperSource["WSJ"] = "wsj";
 })(NewsScraperSource || (NewsScraperSource = {}));
 ;
 ;

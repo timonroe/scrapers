@@ -12,6 +12,7 @@ export enum NewsScraperSource {
   NEWSNATION = 'newsnation',
   NEWSWEEK = 'newsweek',
   // WASH_EXAM = 'washexam',
+  WSJ = 'wsj',
 };
 
 export type NewsScraperHeadline = {

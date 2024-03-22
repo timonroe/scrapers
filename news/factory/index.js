@@ -7,6 +7,7 @@ import { FoxScraper } from '../fox/index.js';
 import { NewsweekScraper } from '../newsweek/index.js';
 import { NewsnationScraper } from '../newsnation/index.js';
 // import { WashExamScraper } from '../wash-exam/index.js';
+import { WsjScraper } from '../wall-street-journal/index.js';
 export class NewsScraperFactory {
     constructor() {
     }
@@ -31,6 +32,8 @@ export class NewsScraperFactory {
             else if (source === NewsScraperSource.NEWSWEEK)
                 return new NewsweekScraper();
             // else if (source === NewsScraperSource.WASH_EXAM) return new WashExamScraper();
+            else if (source === NewsScraperSource.WSJ)
+                return new WsjScraper();
             else
                 throw new Error(`news scraper source: ${source} is invalid`);
         });

@@ -7,4 +7,5 @@ export { FoxScraper } from './fox/index.js';
 export { NewsnationScraper } from './newsnation/index.js';
 export { NewsweekScraper } from './newsweek/index.js';
 export { WashExamScraper } from './wash-exam/index.js';
+export { WsjScraper } from './wall-street-journal/index.js';
 export { NewsScraperFactory } from './factory/index.js';
