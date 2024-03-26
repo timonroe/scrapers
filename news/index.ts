@@ -4,6 +4,7 @@ export { APScraper } from './ap/index.js';
 export { BBCScraper } from './bbc/index.js';
 export { CNNScraper } from './cnn/index.js';
 export { CSMonitorScraper } from './chris-sci-monitor/index.js';
+export { DispatchScraper } from './dispatch/index.js';
 export { EpochTimesScraper } from './epoch-times/index.js';
 export { FoxScraper } from './fox/index.js';
 export { NewsnationScraper } from './newsnation/index.js';

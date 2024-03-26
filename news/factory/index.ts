@@ -7,6 +7,7 @@ import { APScraper } from '../ap/index.js';
 import { BBCScraper } from '../bbc/index.js';
 import { CNNScraper } from '../cnn/index.js';
 import { CSMonitorScraper } from '../chris-sci-monitor/index.js';
+import { DispatchScraper } from '../dispatch/index.js';
 import { EpochTimesScraper } from '../epoch-times/index.js';
 import { FoxScraper } from '../fox/index.js';
 import { NewsweekScraper } from '../newsweek/index.js';
@@ -29,6 +30,7 @@ export class NewsScraperFactory {
       else if (source === NewsScraperSource.BBC) return new BBCScraper();
       else if (source === NewsScraperSource.CNN) return new CNNScraper();
       else if (source === NewsScraperSource.CS_MONITOR) return new CSMonitorScraper();
+      else if (source === NewsScraperSource.DISPATCH) return new DispatchScraper();
       else if (source === NewsScraperSource.EPOCH_TIMES) return new EpochTimesScraper();
       else if (source === NewsScraperSource.FOX) return new FoxScraper();
       else if (source === NewsScraperSource.NEWSNATION) return new NewsnationScraper();

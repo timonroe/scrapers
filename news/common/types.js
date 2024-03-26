@@ -11,6 +11,7 @@ export var NewsScraperSource;
     NewsScraperSource["BBC"] = "bbc";
     NewsScraperSource["CNN"] = "cnn";
     NewsScraperSource["CS_MONITOR"] = "csmonitor";
+    NewsScraperSource["DISPATCH"] = "dispatch";
     NewsScraperSource["EPOCH_TIMES"] = "epochtimes";
     NewsScraperSource["FOX"] = "fox";
     NewsScraperSource["NEWSNATION"] = "newsnation";

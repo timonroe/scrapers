@@ -113,6 +113,7 @@
     "./bbc/index.ts",
     "./chris-sci-monitor/index.ts",
     "./cnn/index.ts",
+    "./dispatch/index.ts",
     "./epoch-times/index.ts",
     "./fox/index.ts",
     "./newsnation/index.ts",
