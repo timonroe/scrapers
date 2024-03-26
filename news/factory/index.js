@@ -1,4 +1,5 @@
 import { NewsScraperSource, } from '../common/types.js';
+import { ABCScraper } from '../abc/index.js';
 import { APScraper } from '../ap/index.js';
 import { BBCScraper } from '../bbc/index.js';
 import { CNNScraper } from '../cnn/index.js';
@@ -19,7 +20,9 @@ export class NewsScraperFactory {
             sources.push(...Object.values(NewsScraperSource).map(source => source));
         }
         return sources.map(source => {
-            if (source === NewsScraperSource.AP)
+            if (source === NewsScraperSource.ABC)
+                return new ABCScraper();
+            else if (source === NewsScraperSource.AP)
                 return new APScraper();
             else if (source === NewsScraperSource.BBC)
                 return new BBCScraper();

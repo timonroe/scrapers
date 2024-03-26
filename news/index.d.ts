@@ -4,6 +4,7 @@ export declare enum NewsScraperType {
 }
 
 export declare enum NewsScraperSource {
+  ABC = 'abc',
   AP = 'ap',
   BBC = 'bbc',
   CNN = 'cnn',
@@ -29,6 +30,11 @@ export declare type NewsScraperResponse = {
 }
 
 export declare interface NewsScraper {
+  scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
+}
+
+export declare class ABCScraper implements NewsScraper {
+  constructor();
   scrape(type: NewsScraperType): Promise<NewsScraperResponse>;
 }
 

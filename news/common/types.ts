@@ -4,6 +4,7 @@ export enum NewsScraperType {
 };
 
 export enum NewsScraperSource {
+  ABC = 'abc',
   AP = 'ap',
   BBC = 'bbc',
   CNN = 'cnn',

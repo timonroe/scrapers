@@ -6,6 +6,7 @@ export var NewsScraperType;
 ;
 export var NewsScraperSource;
 (function (NewsScraperSource) {
+    NewsScraperSource["ABC"] = "abc";
     NewsScraperSource["AP"] = "ap";
     NewsScraperSource["BBC"] = "bbc";
     NewsScraperSource["CNN"] = "cnn";
